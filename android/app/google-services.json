@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "260086572476",
+    "project_id": "gritzafood",
+    "storage_bucket": "gritzafood.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:260086572476:android:dfa9e59dbc5bd45dbef7b9",
+        "android_client_info": {
+          "package_name": "com.gritzafood"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "260086572476-tjjoqebe7t4s98prsbdd8e3n1vkr25sg.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.gritzafood",
+            "certificate_hash": "3825756b9b9688ee6b0b332997490db0f590d014"
+          }
+        },
+        {
+          "client_id": "260086572476-cejh3m1rk64nmveo6u1ksbasq14l9v96.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD3CuXvo8PvCSWo89j9SdVEkvvEnkShJZQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "260086572476-cejh3m1rk64nmveo6u1ksbasq14l9v96.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
