@@ -2,7 +2,6 @@
 
 Gritza Food
 
-## Getting Started
 # Flutter Food Ordering and Delivery Mobile Application 
 
 ## 🤓 Author(s)
@@ -10,7 +9,7 @@ Gritza Food
 
 ## ScreenShots
 ### Splash Screen and Home Page
-<img src="screens/splash_screen.png" height="500em" /> &nbsp;&nbsp;&nbsp;&nbsp; <img src="screens/home_screen.jpg" height="500em" />
+<img src="screens/splash_screen_screen.png" height="500em" /> &nbsp;&nbsp;&nbsp;&nbsp; <img src="screens/home_screen.png" height="500em" />
 
 ### Food Details Screen & Add To Cart Screen
 <img src="screens/restaurant_details_screen.png" height="500em" /> &nbsp;&nbsp;&nbsp;&nbsp; <img src="screens/add_to_cart_screen.png" height="500em" />
