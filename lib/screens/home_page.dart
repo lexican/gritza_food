@@ -229,7 +229,6 @@ class ItemSearchDelegate extends SearchDelegate<CategoryModel> {
 
   @override
   Widget buildResults(BuildContext context) {
-    // TODO: implement buildResults
     return StreamBuilder(
       stream: restaurantApi.streamDataCollection(),
       builder: (context, snapshot) {
@@ -277,7 +276,6 @@ class ItemSearchDelegate extends SearchDelegate<CategoryModel> {
   @override
   Widget buildSuggestions(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
-    // TODO: implement buildSuggestions
     return StreamBuilder(
         stream: restaurantApi.streamDataCollection(),
         builder: (context, snapshot) {

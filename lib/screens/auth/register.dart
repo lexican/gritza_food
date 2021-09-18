@@ -183,14 +183,14 @@ class _RegisterState extends State<Register> {
             ),
           ),
           errorBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.red, width: 2.0),
+            borderSide: BorderSide(color: Colors.red, width: 1.0),
             borderRadius: BorderRadius.circular(35.0),
           ),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(35.0),
             borderSide: BorderSide(
               color: Utils.primaryColor,
-              width: 2.0,
+              width: 1.0,
             ),
           ),
           contentPadding: EdgeInsets.symmetric(horizontal: 20)),
@@ -211,14 +211,14 @@ class _RegisterState extends State<Register> {
             ),
           ),
           errorBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.red, width: 2.0),
+            borderSide: BorderSide(color: Colors.red, width: 1.0),
             borderRadius: BorderRadius.circular(35.0),
           ),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(35.0),
             borderSide: BorderSide(
               color: Utils.primaryColor,
-              width: 2.0,
+              width: 1.0,
             ),
           ),
           contentPadding: EdgeInsets.symmetric(horizontal: 20)),
@@ -239,14 +239,14 @@ class _RegisterState extends State<Register> {
             ),
           ),
           errorBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.red, width: 2.0),
+            borderSide: BorderSide(color: Colors.red, width: 1.0),
             borderRadius: BorderRadius.circular(35.0),
           ),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(35.0),
             borderSide: BorderSide(
               color: Utils.primaryColor,
-              width: 2.0,
+              width: 1.0,
             ),
           ),
           contentPadding: EdgeInsets.symmetric(horizontal: 20)),
@@ -267,14 +267,14 @@ class _RegisterState extends State<Register> {
             ),
           ),
           border: OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.red, width: 2.0),
+            borderSide: BorderSide(color: Colors.red, width: 1.0),
             borderRadius: BorderRadius.circular(35.0),
           ),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(35.0),
             borderSide: BorderSide(
               color: Utils.primaryColor,
-              width: 2.0,
+              width: 1.0,
             ),
           ),
           contentPadding: EdgeInsets.symmetric(horizontal: 20)),
@@ -295,14 +295,14 @@ class _RegisterState extends State<Register> {
             ),
           ),
           errorBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.red, width: 2.0),
+            borderSide: BorderSide(color: Colors.red, width: 1.0),
             borderRadius: BorderRadius.circular(35.0),
           ),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(35.0),
             borderSide: BorderSide(
               color: Utils.primaryColor,
-              width: 2.0,
+              width: 1.0,
             ),
           ),
           contentPadding: EdgeInsets.symmetric(horizontal: 20)),
@@ -323,20 +323,14 @@ class _RegisterState extends State<Register> {
             ),
           ),
           errorBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.red, width: 2.0),
+            borderSide: BorderSide(color: Colors.red, width: 1.0),
             borderRadius: BorderRadius.circular(35.0),
           ),
           border: OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.red, width: 2.0),
+            borderSide: BorderSide(color: Utils.primaryColor, width: 1.0),
             borderRadius: BorderRadius.circular(35.0),
           ),
-          enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(35.0),
-            borderSide: BorderSide(
-              color: Utils.primaryColor,
-              width: 2.0,
-            ),
-          ),
+
           contentPadding: EdgeInsets.symmetric(horizontal: 20)),
       validator: pwdValidator,
       onSaved: (value) => _confirmPassword = value.trim(),

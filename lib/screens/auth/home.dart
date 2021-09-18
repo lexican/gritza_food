@@ -513,7 +513,7 @@ class _HomeState extends State<Home> {
           borderRadius: BorderRadius.circular(35.0),
           borderSide: BorderSide(
             color: Utils.primaryColor,
-            width: 2.0,
+            width: 1.0,
           ),
         ),
         contentPadding: EdgeInsets.symmetric(horizontal: 20),
@@ -542,7 +542,7 @@ class _HomeState extends State<Home> {
             borderRadius: BorderRadius.circular(35.0),
             borderSide: BorderSide(
               color: Utils.primaryColor,
-              width: 2.0,
+              width: 1.0,
             ),
           ),
           hintText: 'Password',

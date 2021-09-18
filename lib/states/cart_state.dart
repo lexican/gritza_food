@@ -30,10 +30,10 @@ class CartState with ChangeNotifier, DiagnosticableTreeMixin {
     var tempProducts = [..._cartitems];
     //var tempCart = [];
     int index = -1;
-    var removedProduct;
+    //var removedProduct;
     for (int i = 0; i < tempProducts.length; i++) {
       if (tempProducts[i].cartId == item.cartId) {
-        removedProduct = tempProducts[i];
+        //removedProduct = tempProducts[i];
         index = i;
         break;
       }

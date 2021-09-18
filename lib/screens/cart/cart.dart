@@ -22,7 +22,6 @@ class _CartModalState extends State<CartModal> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     categoriesSubModel = widget.categoriesSubModel;
   }
@@ -208,7 +207,6 @@ class _CategoryItemState extends State<CategoryItem> {
   CategoriesSubModel categoriesSubModel;
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     categoriesSubModel = widget.categoriesSubModel;
   }

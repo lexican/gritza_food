@@ -30,7 +30,6 @@ class _RestaurantFullPageState extends State<RestaurantFullPage> {
   dynamic activeCategory = "0";
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     restaurant = widget.restaurant;
     getCategories("0");
@@ -284,7 +283,6 @@ class _BuildCategoriesListState extends State<BuildCategoriesList> {
   RestaurantModel restaurant;
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     categoryModel = widget.categoryModel;
     restaurant = widget.restaurant;
@@ -355,7 +353,6 @@ class _CategoryItemState extends State<CategoryItem> {
   RestaurantModel restaurant;
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     categoriesSubModel = widget.categoriesSubModel;
     categoryModel = widget.categoryModel;
@@ -465,7 +462,6 @@ class _ModalFitState extends State<ModalFit> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     categoriesSubModel = widget.categoriesSubModel;
     categoryModel = widget.categoryModel;

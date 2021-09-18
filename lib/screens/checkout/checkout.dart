@@ -12,6 +12,7 @@ import 'package:gritzafood/Services/initialize_paystack.dart';
 import 'package:gritzafood/Utils/Utils.dart';
 import 'package:gritzafood/api/order_api.dart';
 import 'package:gritzafood/models/categories_sub_model.dart';
+import 'package:gritzafood/screens/auth/home.dart';
 import 'package:gritzafood/screens/location/Location.dart';
 import 'package:gritzafood/states/cart_state.dart';
 import 'package:gritzafood/states/map_states.dart';
@@ -39,7 +40,6 @@ class _CheckoutState extends State<Checkout> {
 
   @override
   void initState() {
-    // TODO: implement initState
     plugin.initialize(publicKey: publicKey);
     super.initState();
     categoriesSubModel = widget.categoriesSubModel;
@@ -131,11 +131,11 @@ class _CheckoutState extends State<Checkout> {
             backgroundColor: Colors.black,
             textColor: Colors.white,
             fontSize: 16.0);
-        // cartState.removeAll();
-        // Navigator.pushAndRemoveUntil(
-        //     context,
-        //     MaterialPageRoute(builder: (context) => Home()),
-        //     (Route<dynamic> route) => false);
+        cartState.removeAll();
+        Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (context) => Home()),
+            (Route<dynamic> route) => false);
       } else {
         _showErrorDialog();
       }
@@ -454,7 +454,6 @@ class _CategoryItemState extends State<CategoryItem> {
   CategoriesSubModel categoriesSubModel;
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     categoriesSubModel = widget.categoriesSubModel;
   }
