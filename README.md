@@ -1,4 +1,4 @@
-# gritzafood
+# Gritzafood
 
 Gritza Food
 
