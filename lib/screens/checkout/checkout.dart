@@ -4,6 +4,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_config/flutter_config.dart';
 import 'package:flutter_paystack/flutter_paystack.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -29,9 +30,8 @@ class _CheckoutState extends State<Checkout> {
   int quantity = 1;
   Random random = new Random();
 
-  var publicKey = 'pk_test_741153c540ee9bb4f992e7e55d5bc4a44e6aaefe';
-  // ignore: non_constant_identifier_names
-  var sk_test = "sk_test_bcf2323f9c4cb0924d73923de15e7e3db488ee05";
+  var publicKey = FlutterConfig.get('PAYSTACK_PUBLIC_KEY').toString();
+  var sk_test = FlutterConfig.get('PAYSTACK_TEST_KEY').toString();
 
   bool isGeneratingCode = false;
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -69,6 +69,8 @@ class _CheckoutState extends State<Checkout> {
     });
     User currentUser = _auth.currentUser;
     Map accessCode = await createAccessCode(sk_test, total, currentUser.email);
+
+    print("accessCod: " + accessCode.toString());
 
     setState(() {
       isGeneratingCode = !isGeneratingCode;

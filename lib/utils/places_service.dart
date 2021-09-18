@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:convert' as convert;
 
+import 'package:flutter_config/flutter_config.dart';
 import 'package:gritzafood/models/place.dart';
 import 'package:gritzafood/models/suggestion.dart';
 import 'package:http/http.dart';
@@ -10,17 +11,9 @@ class PlaceApiProvider {
 
   final sessionToken;
 
-  // static final String androidKey = 'YOUR_API_KEY_HERE';
-  // static final String iosKey = 'YOUR_API_KEY_HERE';
-  // final apiKey = Platform.isAndroid ? androidKey : iosKey;
-
-  final apiKey = "";
+  final apiKey = FlutterConfig.get('GOOGLE_MAP_API_KEY');
 
   Future<List<Suggestion>> fetchSuggestions(String input, String lang) async {
-    // final request =
-    //     'https://maps.googleapis.com/maps/api/place/autocomplete/json?input=$input&types=address&language=$lang&components=country:ch&key=$apiKey&sessiontoken=$sessionToken';
-    //final response = await http.get(request);
-
     final request =
         "https://maps.googleapis.com/maps/api/place/autocomplete/json?input=$input&types=geocode&language=$lang&key=$apiKey";
 
@@ -53,7 +46,6 @@ class PlaceApiProvider {
   Future<Place> getPlace(String placeId) async {
     var request =
         'https://maps.googleapis.com/maps/api/place/details/json?place_id=$placeId&key=$apiKey';
-
     final url = Uri.parse(request);
     Response response = await get(url);
 

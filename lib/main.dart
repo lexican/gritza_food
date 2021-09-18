@@ -5,6 +5,7 @@ import 'package:gritzafood/screens/splash_screens.dart';
 import 'package:gritzafood/states/cart_state.dart';
 import 'package:gritzafood/states/map_states.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_config/flutter_config.dart';
 
 // void main() {
 //   runApp(
@@ -23,6 +24,7 @@ bool USE_FIRESTORE_EMULATOR = false;
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await FlutterConfig.loadEnvVariables();
   await Firebase.initializeApp();
   if (USE_FIRESTORE_EMULATOR) {
     FirebaseFirestore.instance.settings = const Settings(
