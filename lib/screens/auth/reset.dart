@@ -77,26 +77,22 @@ class _ResetScreenState extends State<ResetScreen> {
       keyboardType: TextInputType.emailAddress,
       autofocus: false,
       decoration: new InputDecoration(
-        errorBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: Colors.red),
-          borderRadius: BorderRadius.circular(10.0),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10.0),
-          borderSide: BorderSide(
-            color: Colors.blue,
+          hintText: 'Confirm Password',
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(35.0),
+            borderSide: BorderSide(
+              color: Colors.blue,
+            ),
           ),
-        ),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10.0),
-          borderSide: BorderSide(
-            color: Utils.primaryColor,
-            width: 2.0,
+          errorBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: Colors.red, width: 1.0),
+            borderRadius: BorderRadius.circular(35.0),
           ),
-        ),
-        contentPadding: EdgeInsets.symmetric(horizontal: 20),
-        hintText: 'Email',
-      ),
+          border: OutlineInputBorder(
+            borderSide: BorderSide(color: Utils.primaryColor, width: 1.0),
+            borderRadius: BorderRadius.circular(35.0),
+          ),
+          contentPadding: EdgeInsets.symmetric(horizontal: 20)),
       validator: Utils.validateEmail,
       onSaved: (value) => _email = value.trim(),
     );

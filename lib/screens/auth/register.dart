@@ -26,20 +26,10 @@ class _RegisterState extends State<Register> {
 
   var err = "";
 
-  // final GoogleSignIn _googleSignIn = GoogleSignIn();
-  // final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
-  // SharedPreferences _preferences;
-
   bool isLoading = false;
   bool isLoggedIn = false;
   final _formKey = new GlobalKey<FormState>();
   TextStyle style = TextStyle(fontFamily: 'Montserrat', fontSize: 20.0);
-
-  // @override
-  // void intState() {
-  //   super.initState();
-  //   //isSignedIn();
-  // }
 
   bool validateAndSave() {
     final form = _formKey.currentState;
@@ -330,7 +320,6 @@ class _RegisterState extends State<Register> {
             borderSide: BorderSide(color: Utils.primaryColor, width: 1.0),
             borderRadius: BorderRadius.circular(35.0),
           ),
-
           contentPadding: EdgeInsets.symmetric(horizontal: 20)),
       validator: pwdValidator,
       onSaved: (value) => _confirmPassword = value.trim(),
@@ -352,20 +341,6 @@ class _RegisterState extends State<Register> {
                     color: Colors.white, fontWeight: FontWeight.bold)),
       ),
     );
-
-    // Widget showLogo() {
-    //   return new Hero(
-    //     tag: 'hero',
-    //     child: Padding(
-    //       padding: EdgeInsets.fromLTRB(0.0, 70.0, 0.0, 0.0),
-    //       child: CircleAvatar(
-    //         backgroundColor: Colors.transparent,
-    //         radius: 48.0,
-    //         child: Image.asset('assets/flutter-icon.png'),
-    //       ),
-    //     ),
-    //   );
-    // }
 
     return Scaffold(
         body: Container(

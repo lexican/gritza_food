@@ -11,8 +11,8 @@ class Utils {
   static String nairaCode = "\u20A6";
 
   static Color status_pending = Colors.yellow;
-    static Color status_confirmed = Color(0xFF388e3c);
-      static Color status_cacelled = Color(0xFFd32f2f);
+  static Color status_confirmed = Color(0xFF388e3c);
+  static Color status_cacelled = Color(0xFFd32f2f);
 
   static final String kGoogleApiKey = "AIzaSyD3CuXvo8PvCSWo89j9SdVEkvvEnkShJZQ";
 

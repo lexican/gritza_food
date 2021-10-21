@@ -125,11 +125,6 @@ class _RestaurantFullPageState extends State<RestaurantFullPage> {
                         fontWeight: FontWeight.bold)),
                 centerTitle: false,
                 flexibleSpace: FlexibleSpaceBar(
-                    // title: Text(restaurant.restaurant_name,
-                    //     style: GoogleFonts.roboto(
-                    //         fontSize: 24,
-                    //         color: Colors.white,
-                    //         fontWeight: FontWeight.bold)),
                     background: Stack(
                   children: [
                     CachedNetworkImage(
@@ -222,8 +217,6 @@ class _RestaurantFullPageState extends State<RestaurantFullPage> {
               backgroundColor: Colors.transparent,
               builder: (context) => CartModal(),
             );
-            // Navigator.pushReplacement(
-            //     context, MaterialPageRoute(builder: (context) => CartModal()));
           },
           child: Container(
             margin: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
@@ -321,18 +314,6 @@ class _BuildCategoriesListState extends State<BuildCategoriesList> {
       ),
       ...children
     ]));
-    // List.generate(items.length, (idx) {
-    //   return Padding(
-    //     padding: const EdgeInsets.only(left: 8.0, right: 8.0),
-    //     child: Card(
-    //       child: ListTile(
-    //         leading: Icon(null),
-    //         title: Text(items[idx].name),
-    //         onTap: null,
-    //       ),
-    //     ),
-    //   );
-    // });
   }
 }
 
@@ -483,7 +464,6 @@ class _ModalFitState extends State<ModalFit> {
   }
 
   void showAlertDialog(BuildContext context, cartState) {
-    // set up the buttons
     Widget cancelButton = TextButton(
       child: Text("Cancel"),
       onPressed: () {
@@ -506,7 +486,6 @@ class _ModalFitState extends State<ModalFit> {
       },
     );
 
-    // set up the AlertDialog
     AlertDialog alert = AlertDialog(
       title: Text("Confirm"),
       content: Text(
@@ -516,8 +495,6 @@ class _ModalFitState extends State<ModalFit> {
         continueButton,
       ],
     );
-
-    // show the dialog
     showDialog(
       context: context,
       builder: (BuildContext context) {

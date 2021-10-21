@@ -24,69 +24,20 @@ class _LocationState extends State<Location> {
     super.initState();
   }
 
-  //
   bool isLoading = false;
-  //
-  // final _formKey = new GlobalKey<FormState>();
 
   Widget showCircularProgress() {
-    // if (isLoading == true) {
-    //   return Center(child: CircularProgressIndicator());
-    // }
     return Container(
       height: 0.0,
       width: 0.0,
     );
   }
 
-  // bool validateAndSave() {
-  //   final form = _formKey.currentState;
-  //   form.save();
-  //   if (form.validate()) {
-  //     return true;
-  //   } else {
-  //     return false;
-  //   }
-  // }
-
   @override
   Widget build(BuildContext context) {
     final appState = Provider.of<MapStates>(context);
     var height = MediaQuery.of(context).size.height;
     var width = MediaQuery.of(context).size.width;
-
-    // final toField = TextFormField(
-    //   maxLines: 1,
-    //   keyboardType: TextInputType.text,
-    //   autofocus: false,
-    //   decoration: new InputDecoration(
-    //       hintText: 'Enter Area',
-    //       fillColor: Color(0xFFFFFFFF),
-    //       filled: true,
-    //       focusedBorder: OutlineInputBorder(
-    //         //borderRadius: BorderRadius.circular(35.0),
-    //         borderSide: BorderSide(
-    //           color: Colors.blue,
-    //         ),
-    //       ),
-    //       errorBorder: OutlineInputBorder(
-    //         borderSide: BorderSide(color: Colors.red, width: 2.0),
-    //         //borderRadius: BorderRadius.circular(35.0),
-    //       ),
-    //       border: OutlineInputBorder(
-    //         //borderRadius: BorderRadius.circular(35.0),
-    //         borderSide: BorderSide(
-    //           color: Utils.primaryColor,
-    //           width: 2.0,
-    //         ),
-    //       ),
-    //       contentPadding: EdgeInsets.symmetric(horizontal: 20)),
-    //   validator: (value) => value.isEmpty ? 'Area can\'t be empty' : null,
-    //   //onSaved: (value) => _area = value.trim(),
-    //   onTap: () async {},
-    //   controller: appState.locationController,
-    // );
-
     final continueButton = Material(
       elevation: 5.0,
       borderRadius: BorderRadius.circular(30.0),
@@ -177,11 +128,6 @@ class _LocationState extends State<Location> {
                 child: Container(
                   width: width,
                   height: height,
-                  //color: Colors.green,
-                  // child: Column(
-                  //   mainAxisAlignment: MainAxisAlignment.start,
-                  //   children: [fromField, toField],
-                  // ),
                 ),
               ),
               appState.loading

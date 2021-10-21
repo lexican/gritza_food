@@ -462,16 +462,7 @@ class _CategoryItemState extends State<CategoryItem> {
   Widget build(BuildContext context) {
     final cartState = Provider.of<CartState>(context);
     return GestureDetector(
-      onTap: () {
-        // showMaterialModalBottomSheet(
-        //   expand: false,
-        //   context: context,
-        //   backgroundColor: Colors.transparent,
-        //   builder: (context) => ModalFit(
-        //     categoriesSubModel: categoriesSubModel,
-        //   ),
-        // );
-      },
+      onTap: () {},
       child: Container(
         padding: EdgeInsets.symmetric(vertical: 10),
         height: 140,

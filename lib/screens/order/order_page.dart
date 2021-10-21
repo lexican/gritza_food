@@ -8,6 +8,7 @@ import 'package:gritzafood/api/order_api.dart';
 import 'package:gritzafood/screens/order/order_full_page.dart';
 import 'package:intl/intl.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class OrderPage extends StatefulWidget {
   @override
@@ -47,15 +48,12 @@ class _OrderPageState extends State<OrderPage>
           controller: _controller,
           tabs: [
             Tab(
-              //icon: const Icon(Icons.home),
               text: 'All',
             ),
             Tab(
-              //icon: const Icon(Icons.my_location),
               text: 'Pending',
             ),
             Tab(
-              //icon: const Icon(Icons.my_location),
               text: 'Completed',
             ),
           ],
@@ -79,22 +77,27 @@ class _OrderPageState extends State<OrderPage>
               }
               if (stream.data.size == 0) {
                 return Container(
-                  color: Color(0xfffafafa),
-                  width: double.infinity,
-                  height: height - (35 + 58 + 24 + kToolbarHeight),
-                  child: Center(
-                    child: Text(
-                      "No Orders found",
-                      style: TextStyle(fontFamily: "Roboto"),
-                    ),
-                  ),
-                );
+                    color: Color(0xfffafafa),
+                    width: double.infinity,
+                    height: height - (35 + 58 + 24 + kToolbarHeight),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SvgPicture.asset("assets/images/cart.svg"),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        Text(
+                          "No orders yet",
+                          style: TextStyle(fontFamily: "Roboto", fontSize: 18),
+                        ),
+                      ],
+                    ));
               }
               QuerySnapshot querySnapshot = stream.data;
               return Container(
                 color: Color(0xfffafafa),
                 width: double.infinity,
-                //height: height - (35 + 58 + 24 + kToolbarHeight),
                 child: ListView.builder(
                     //reverse: true,
                     primary: false,
@@ -123,15 +126,21 @@ class _OrderPageState extends State<OrderPage>
               }
               if (stream.data.size == 0) {
                 return Container(
-                  width: double.infinity,
-                  height: height - (35 + 58 + 24 + kToolbarHeight),
-                  child: Center(
-                    child: Text(
-                      "No Orders found",
-                      style: TextStyle(fontFamily: "Roboto"),
-                    ),
-                  ),
-                );
+                    width: double.infinity,
+                    height: height - (35 + 58 + 24 + kToolbarHeight),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SvgPicture.asset("assets/images/cart.svg"),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        Text(
+                          "No orders yet",
+                          style: TextStyle(fontFamily: "Roboto", fontSize: 18),
+                        ),
+                      ],
+                    ));
               }
               QuerySnapshot querySnapshot = stream.data;
               return ListView.builder(
@@ -160,15 +169,21 @@ class _OrderPageState extends State<OrderPage>
               }
               if (stream.data.size == 0) {
                 return Container(
-                  width: double.infinity,
-                  height: height - (35 + 58 + 24 + kToolbarHeight),
-                  child: Center(
-                    child: Text(
-                      "No Orders found",
-                      style: TextStyle(fontFamily: "Roboto"),
-                    ),
-                  ),
-                );
+                    width: double.infinity,
+                    height: height - (35 + 58 + 24 + kToolbarHeight),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SvgPicture.asset("assets/images/cart.svg"),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        Text(
+                          "No orders yet",
+                          style: TextStyle(fontFamily: "Roboto", fontSize: 18),
+                        ),
+                      ],
+                    ));
               }
               QuerySnapshot querySnapshot = stream.data;
               return ListView.builder(
@@ -229,24 +244,6 @@ class _OrderitemState extends State<Orderitem> {
     } else {
       color = Utils.status_cacelled;
     }
-
-    setLocation();
-  }
-
-  void setLocation() async {
-    // List<Placemark> placemark =
-    //     await Geolocator().placemarkFromCoordinates(order.lat, order.lng);
-    // print("placemark:" + placemark.toString());
-    // setState(() {
-    //   deliveryAddress = placemark[0].name;
-    // });
-    // final coordinates = new Coordinates(1.10, 45.50);
-    // //var addresses = await Geocoder.local.findAddressesFromCoordinates(coordinates);
-    // var addresses = await Geocoder.google(Utils.kGoogleApiKey)
-    //     .findAddressesFromCoordinates(coordinates);
-    // // var first = addresses.first;
-    // // print("${first.featureName} : ${first.addressLine}");
-    // print("addresses: " + addresses.toString());
   }
 
   @override
