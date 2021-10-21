@@ -1,16 +1,25 @@
-# gritzafood
+# Gritzafood
 
 Gritza Food
 
-## Getting Started
+# Flutter Food Ordering and Delivery Mobile Application 
 
-This project is a starting point for a Flutter application.
+## 🤓 Author(s)
+**  Adeyemo Adekunle** 
 
-A few resources to get you started if this is your first Flutter project:
+## ScreenShots
+### Splash Screen and Home Page
+<img src="screens/splash_screen_screen.png" height="500em" /> &nbsp;&nbsp;&nbsp;&nbsp; <img src="screens/home_screen.png" height="500em" />
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+### Food Details Screen & Add To Cart Screen
+<img src="screens/restaurant_details_screen.png" height="500em" /> &nbsp;&nbsp;&nbsp;&nbsp; <img src="screens/add_to_cart_screen.png" height="500em" />
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+### Login & Registration Screen
+<img src="screens/sign_in_screen.png" height="500em" />&nbsp;&nbsp;&nbsp;&nbsp; <img src="screens/sign_up_screen.png" height="500em" />
+
+## ✨ Requirements
+* Any Operating System (ie. MacOS X, Linux, Windows)
+* Any IDE with Flutter SDK installed (ie.  Android Studio, VSCode, IntelliJ, etc)
+* A little knowledge of Dart and Flutter
+* A brain to think 🤓🤓
+
