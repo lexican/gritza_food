@@ -4,18 +4,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:gritzafood/models/place.dart';
 
-/// Mix-in [DiagnosticableTreeMixin] to have access to [debugFillProperties] for the devtool
-// ignore: prefer_mixin
 class MapStates with ChangeNotifier, DiagnosticableTreeMixin {
-  // int _count = 0;
-  //
-  // int get count => _count;
-  //
-  // void increment() {
-  //   _count++;
-  //   notifyListeners();
-  // }
-
   static LatLng _initialPosition;
   LatLng _lastPosition;
   bool locationServiceActive = true;
@@ -82,25 +71,19 @@ class MapStates with ChangeNotifier, DiagnosticableTreeMixin {
   }
 
   void onTap(double lat, double lng) async {
-    List<Placemark> placemark = await Geolocator()
-        .placemarkFromCoordinates(lat, lng);
+    List<Placemark> placemark =
+        await Geolocator().placemarkFromCoordinates(lat, lng);
     _initialPosition = LatLng(lat, lng);
     _lastPosition = LatLng(lat, lng);
     calDistance();
 
-    print(
-        "the latitude is: $lat and the longitude is: $lng ");
+    print("the latitude is: $lat and the longitude is: $lng ");
     print("initial position is : ${_initialPosition.toString()}");
     locationController.text = placemark[0].name;
     _loading = false;
     //_loading = true;
     _location = placemark[0].name;
   }
-
-  // void isLoading(value){
-  //  _loading = value;
-  //  notifyListeners();
-  // }
 
   void _loadingInitialPosition() async {
     await Future.delayed(Duration(seconds: 5)).then((v) {
@@ -137,11 +120,4 @@ class MapStates with ChangeNotifier, DiagnosticableTreeMixin {
         LatLng(place.geometry.location.lat, place.geometry.location.lng);
     calDistance();
   }
-
-  /// Makes `Counter` readable inside the devtools by listing all of its properties
-  // @override
-  // void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-  //   super.debugFillProperties(properties);
-  //   properties.add(IntProperty('count', count));
-  // }
 }

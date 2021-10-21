@@ -58,11 +58,8 @@ class _ProfileState extends State<Profile> {
     DocumentSnapshot doc = await usersRef.doc(user.uid).get();
 
     if (doc.exists) {
-      //print("doc.data()['displayName'];" + doc.data()['displayName']);
-
       if (mounted) {
         setState(() {
-          //displayName = doc.data()['displayName'];
           Map getDocs = doc.data();
           displayName = getDocs['displayName']
                   .split(' ')[0]
@@ -140,10 +137,7 @@ class _ProfileState extends State<Profile> {
     form.save();
     if (validateAndSave()) {
       final User user = _auth.currentUser;
-      //print("user : " + user.toString());
-
       SharedPreferences prefs = await SharedPreferences.getInstance();
-
       FirebaseFirestore.instance
           .collection("users")
           .doc(user.uid)
@@ -161,7 +155,6 @@ class _ProfileState extends State<Profile> {
                 })
               })
           .catchError((err) => {
-                //showCenterShortToast("Email already exist"),
                 setState(() {
                   isLoading = false;
                 }),
@@ -195,7 +188,6 @@ class _ProfileState extends State<Profile> {
                     image: File(pickedFile.path),
                   )),
         ).then((value) {
-          // if value is true you get the result as bool else no result
           if (value != null) {
             setState(() {
               loadUser();
@@ -354,13 +346,11 @@ class _ProfileState extends State<Profile> {
                     child: Stack(
                       children: <Widget>[
                         Container(
-                            //decoration: new BoxDecoration(color: Colors.white),
                             alignment: Alignment.center,
                             height: 100,
                             width: 100,
                             child: photoUrl != ""
                                 ? ClipOval(
-                                    //borderRadius: BorderRadius.circular(40.0),
                                     child: CachedNetworkImage(
                                       height: 100,
                                       width: 100,

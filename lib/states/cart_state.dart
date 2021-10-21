@@ -28,12 +28,9 @@ class CartState with ChangeNotifier, DiagnosticableTreeMixin {
   void removeItem(CategoriesSubModel item) {
     print('remove id' + item.cartId);
     var tempProducts = [..._cartitems];
-    //var tempCart = [];
     int index = -1;
-    //var removedProduct;
     for (int i = 0; i < tempProducts.length; i++) {
       if (tempProducts[i].cartId == item.cartId) {
-        //removedProduct = tempProducts[i];
         index = i;
         break;
       }
@@ -120,7 +117,6 @@ class CartState with ChangeNotifier, DiagnosticableTreeMixin {
     notifyListeners();
   }
 
-  /// Makes `Counter` readable inside the devtools by listing all of its properties
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);

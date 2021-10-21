@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:gritzafood/models/categories_sub_model.dart';
@@ -79,8 +80,19 @@ class _CartModalState extends State<CartModal> {
                           },
                         )
                       : Container(
-                          child: Center(
-                            child: Text("Your cart is currently empty"),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              SvgPicture.asset("assets/images/cart.svg"),
+                              SizedBox(
+                                height: 20,
+                              ),
+                              Text(
+                                "No items in your cart yet",
+                                style: TextStyle(
+                                    fontFamily: "Roboto", fontSize: 18),
+                              ),
+                            ],
                           ),
                         )),
               Container(
@@ -158,7 +170,9 @@ class _CartModalState extends State<CartModal> {
                       Material(
                           elevation: 5.0,
                           borderRadius: BorderRadius.circular(35.0),
-                          color: Utils.primaryColor, //Color(0xff01A0C7),
+                          color: cartState.cartitems.length == 0
+                              ? Colors.orange[300]
+                              : Utils.primaryColor,
                           child: MaterialButton(
                               minWidth: MediaQuery.of(context).size.width,
                               padding:
@@ -215,16 +229,7 @@ class _CategoryItemState extends State<CategoryItem> {
   Widget build(BuildContext context) {
     final cartState = Provider.of<CartState>(context);
     return GestureDetector(
-      onTap: () {
-        // showMaterialModalBottomSheet(
-        //   expand: false,
-        //   context: context,
-        //   backgroundColor: Colors.transparent,
-        //   builder: (context) => ModalFit(
-        //     categoriesSubModel: categoriesSubModel,
-        //   ),
-        // );
-      },
+      onTap: () {},
       child: Container(
         padding: EdgeInsets.symmetric(vertical: 10),
         height: 140,
@@ -283,12 +288,6 @@ class _CategoryItemState extends State<CategoryItem> {
                         },
                         child: Container(child: Icon(Icons.clear)),
                       )
-                      // IconButton(
-                      //   onPressed: () {
-                      //     cartState.removeItem(categoriesSubModel);
-                      //   },
-                      //   icon: Icon(Icons.clear),
-                      // )
                     ],
                   ),
                 ),

@@ -10,7 +10,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
-//final usersRef = FirebaseFirestore.instance.collection('users');
 
 class ProfilePicsUpload extends StatefulWidget {
   final File image;

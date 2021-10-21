@@ -50,3 +50,5 @@ app.*.map.json
 .env.example
 .env.local
 .env.staging
+key.properties
+app/upload-keystore.jks

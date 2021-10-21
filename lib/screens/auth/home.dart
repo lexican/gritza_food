@@ -50,20 +50,7 @@ class _HomeState extends State<Home> {
   @override
   void initState() {
     super.initState();
-    // Detects when user signed in
-
     getUser();
-    // googleSignIn.onCurrentUserChanged.listen((account) {
-    //   handleSignIn(account);
-    // }, onError: (err) {
-    //   print('Error signing in: $err');
-    // });
-    // // Reauthenticate user when app is opened
-    // googleSignIn.signInSilently(suppressErrors: false).then((account) {
-    //   handleSignIn(account);
-    // }).catchError((err) {
-    //   print('Error signing in: $err');
-    // });
   }
 
   void _select(Choice choice) {
@@ -87,10 +74,6 @@ class _HomeState extends State<Home> {
         setState(() {
           isAuth = true;
         });
-        // uid = user.uid;
-        // name = user.displayName;
-        // userEmail = user.email;
-        // imageUrl = user.photoURL;
       } else {
         setState(() {
           isAuth = false;
@@ -248,9 +231,6 @@ class _HomeState extends State<Home> {
           activeColor: Utils.primaryColor,
           items: [
             BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
-            // BottomNavigationBarItem(
-            //   icon: Icon(Icons.shopping_cart),
-            // ),
             BottomNavigationBarItem(
               label: "Search",
               icon: Icon(
@@ -286,8 +266,6 @@ class _HomeState extends State<Home> {
           DocumentSnapshot doc =
               await usersRef.doc(userCredential.user.uid).get();
           currentUser = modelUser.User.fromSnapshot(doc);
-          //print("${currentUser}");
-
           SharedPreferences prefs = await SharedPreferences.getInstance();
           prefs.setBool('auth', true);
 
@@ -318,8 +296,6 @@ class _HomeState extends State<Home> {
   }
 
   login() async {
-    //googleSignIn.signIn();
-
     final GoogleSignInAccount googleSignInAccount = await googleSignIn.signIn();
     final GoogleSignInAuthentication googleSignInAuthentication =
         await googleSignInAccount.authentication;
@@ -334,7 +310,6 @@ class _HomeState extends State<Home> {
     final User user = userCredential.user;
 
     if (user != null) {
-      // Checking if email and name is null
       assert(user.uid != null);
       assert(user.email != null);
       assert(user.displayName != null);
@@ -349,12 +324,6 @@ class _HomeState extends State<Home> {
       DocumentSnapshot doc = await usersRef.doc(user.uid).get();
 
       if (!doc.exists) {
-        // 2) if the user doesn't exist, then we want to take them to the create account page
-        // final username = await Navigator.push(
-        //     context, MaterialPageRoute(builder: (context) => CreateAccount()));
-
-        // 3) get username from create account, use it to make new user document in users collection
-
         usersRef.doc(user.uid).set({
           "id": user.uid,
           "username": "",
@@ -367,8 +336,6 @@ class _HomeState extends State<Home> {
         doc = await usersRef.doc(user.uid).get();
       }
       currentUser = modelUser.User.fromSnapshot(doc);
-      //print("${currentUser}");
-
       SharedPreferences prefs = await SharedPreferences.getInstance();
       prefs.setBool('auth', true);
 
@@ -381,8 +348,6 @@ class _HomeState extends State<Home> {
       setState(() {
         isAuth = true;
       });
-
-      //return 'Google sign in successful, User UID: ${user.uid}';
     }
   }
 
@@ -424,12 +389,6 @@ class _HomeState extends State<Home> {
 
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setBool('auth', false);
-
-    // prefs.setString('email', "");
-    // prefs.setString('displayName', "");
-    // prefs.setString('photoUrl', currentUser.photoUrl);
-    // prefs.setString('id', currentUser.id);
-    // prefs.setString('username', currentUser.username);
 
     prefs.remove('email');
     prefs.remove('displayName');
@@ -596,13 +555,7 @@ class _HomeState extends State<Home> {
           child: Container(
             padding: EdgeInsets.symmetric(horizontal: 20),
             height: MediaQuery.of(context).size.height,
-            decoration: BoxDecoration(color: Colors.white
-                // gradient: LinearGradient(
-                //   begin: Alignment.topRight,
-                //   end: Alignment.bottomLeft,
-                //   colors: [Colors.white, Colors.purple],
-                // ),
-                ),
+            decoration: BoxDecoration(color: Colors.white),
             alignment: Alignment.center,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -660,7 +613,6 @@ class _HomeState extends State<Home> {
                 SizedBox(
                   height: 25,
                 ),
-
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -683,24 +635,6 @@ class _HomeState extends State<Home> {
                     ),
                   ],
                 )
-
-                // Center(
-                //     child: Text("Don't have an account yet?",
-                //         style: TextStyle(
-                //           fontFamily: 'Roboto',
-                //           fontWeight: FontWeight.w500,
-                //         ))),
-                // TextButton(
-                //   child: Text("Register",
-                //       style: GoogleFonts.roboto(
-                //           fontSize: 18,
-                //           fontWeight: FontWeight.w700,
-                //           color: Colors.black)),
-                //   onPressed: () {
-                //     Navigator.of(context).push(
-                //         MaterialPageRoute(builder: (context) => Register()));
-                //   },
-                // ),
               ],
             ),
           ),

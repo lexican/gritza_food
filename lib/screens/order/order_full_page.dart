@@ -24,7 +24,6 @@ class _OrderFullPageState extends State<OrderFullPage> {
 
   Stream<QuerySnapshot> getRestaurants() {
     return orderApi.getSubDocStreamDataCollection(widget.id);
-    // .where('categoryId', isEqualTo: categoryReference.doc(activeCategory))
   }
 
   @override
@@ -81,7 +80,6 @@ class _OrderFullPageState extends State<OrderFullPage> {
                     if (stream.data.size == 0) {
                       return Container(
                         width: double.infinity,
-                        //height: height - (35 + 58 + 24 + kToolbarHeight + 80),
                         child: Center(
                           child: Text(
                             "No order found.",

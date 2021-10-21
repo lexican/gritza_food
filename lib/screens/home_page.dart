@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:gritzafood/api/restaurant_api.dart';
 import 'package:gritzafood/models/category_model.dart';
@@ -20,7 +21,6 @@ class _HomePageState extends State<HomePage> {
 
   Stream<QuerySnapshot> getRestaurants() {
     return restaurantApi.streamDataCollection();
-    // .where('categoryId', isEqualTo: categoryReference.doc(activeCategory))
   }
 
   @override
@@ -31,39 +31,6 @@ class _HomePageState extends State<HomePage> {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Padding(
-          //   padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-          //   child: TextField(
-          //     cursorColor: Colors.black,
-          //     controller: searchController,
-          //     textInputAction: TextInputAction.go,
-          //     onTap: () async {
-          //       showSearch(context: context, delegate: ItemSearchDelegate());
-          //     },
-          //     onSubmitted: (value) {
-          //       //appState.sendRequest(value);
-          //     },
-          //     decoration: InputDecoration(
-          //       border: new OutlineInputBorder(
-          //         borderRadius: const BorderRadius.all(
-          //           const Radius.circular(30.0),
-          //         ),
-          //       ),
-          //       prefixIcon: Padding(
-          //         padding: EdgeInsets.all(0.0),
-          //         child: Icon(Icons.search),
-          //       ),
-          //       hintText: "Search",
-          //       // border: InputBorder.none,
-          //       fillColor: Color(0XFFfeeeeee),
-          //       filled: true,
-          //       contentPadding: EdgeInsets.only(
-          //         left: 15.0,
-          //         top: 14,
-          //       ),
-          //     ),
-          //   ),
-          // ),
           Expanded(
             child: StreamBuilder<QuerySnapshot>(
               stream: getRestaurants(),
@@ -76,7 +43,24 @@ class _HomePageState extends State<HomePage> {
                 }
 
                 if (stream.hasError) {
-                  return Center(child: Text(stream.error.toString()));
+                  return Center(
+                      child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SvgPicture.asset("assets/images/internet.svg"),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      Text(
+                        "No internet Connection",
+                        style: TextStyle(fontFamily: "Roboto", fontSize: 18),
+                      ),
+                      Text(
+                        "Your internet connection is currently not available please check or try again.",
+                        style: TextStyle(fontFamily: "Roboto", fontSize: 14),
+                      ),
+                    ],
+                  ));
                 }
                 if (stream.data.size == 0) {
                   return Container(
