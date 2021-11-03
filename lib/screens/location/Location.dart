@@ -3,16 +3,15 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:gritzafood/screens/auth/home.dart';
 import 'package:gritzafood/screens/checkout/checkout.dart';
+import 'package:gritzafood/screens/location/address.dart';
 import 'package:gritzafood/states/map_states.dart';
 import 'package:gritzafood/utils/utils.dart';
 import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
 
-import 'Address.dart';
-
 class Location extends StatefulWidget {
   final String nextRoute;
-  Location({Key key, this.nextRoute}) : super(key: key);
+  const Location({Key key, this.nextRoute}) : super(key: key);
 
   @override
   _LocationState createState() => _LocationState();
@@ -27,10 +26,17 @@ class _LocationState extends State<Location> {
   bool isLoading = false;
 
   Widget showCircularProgress() {
-    return Container(
-      height: 0.0,
-      width: 0.0,
-    );
+    return const SizedBox();
+  }
+
+  void showCenterShortToast(String message) {
+    Fluttertoast.showToast(
+        msg: message,
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.CENTER,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.black,
+        textColor: Colors.white);
   }
 
   @override
@@ -44,67 +50,39 @@ class _LocationState extends State<Location> {
       color: Utils.primaryColor, //Color(0xff01A0C7),
       child: MaterialButton(
         minWidth: MediaQuery.of(context).size.width - 40,
-        padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
+        padding: const EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
         onPressed: () {
           if (widget.nextRoute == "Home") {
             if (appState.lastPosition == null) {
-              Fluttertoast.showToast(
-                  msg: "No delivery address selected",
-                  toastLength: Toast.LENGTH_SHORT,
-                  gravity: ToastGravity.CENTER,
-                  timeInSecForIosWeb: 1,
-                  backgroundColor: Colors.red,
-                  textColor: Colors.white,
-                  fontSize: 16.0);
-              Navigator.pushReplacement(
-                  context, MaterialPageRoute(builder: (context) => Home()));
+              showCenterShortToast("No delivery address selected");
+              Navigator.pushReplacement(context,
+                  MaterialPageRoute(builder: (context) => const Home()));
             } else if (appState.distance > 5000) {
-              Fluttertoast.showToast(
-                  msg: "We do not deliver to this location",
-                  toastLength: Toast.LENGTH_SHORT,
-                  gravity: ToastGravity.CENTER,
-                  timeInSecForIosWeb: 1,
-                  backgroundColor: Colors.red,
-                  textColor: Colors.white,
-                  fontSize: 16.0);
-              Navigator.pushReplacement(
-                  context, MaterialPageRoute(builder: (context) => Home()));
+               showCenterShortToast("We do not deliver to this location");
+              Navigator.pushReplacement(context,
+                  MaterialPageRoute(builder: (context) => const Home()));
             } else {
-              Navigator.pushReplacement(
-                  context, MaterialPageRoute(builder: (context) => Home()));
+              Navigator.pushReplacement(context,
+                  MaterialPageRoute(builder: (context) => const Home()));
             }
           } else {
             if (appState.lastPosition == null) {
-              Fluttertoast.showToast(
-                  msg: "No delivery address selected",
-                  toastLength: Toast.LENGTH_SHORT,
-                  gravity: ToastGravity.CENTER,
-                  timeInSecForIosWeb: 1,
-                  backgroundColor: Colors.red,
-                  textColor: Colors.white,
-                  fontSize: 16.0);
-              Navigator.push(
-                  context, MaterialPageRoute(builder: (context) => Checkout()));
+              showCenterShortToast("No delivery address selected");
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => const Checkout()));
             } else if (appState.distance > 5000) {
-              Fluttertoast.showToast(
-                  msg: "We do not deliver to this location",
-                  toastLength: Toast.LENGTH_SHORT,
-                  gravity: ToastGravity.CENTER,
-                  timeInSecForIosWeb: 1,
-                  backgroundColor: Colors.red,
-                  textColor: Colors.white,
-                  fontSize: 16.0);
-              Navigator.push(
-                  context, MaterialPageRoute(builder: (context) => Checkout()));
+              showCenterShortToast("We do not deliver to this location");
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => const Checkout()));
             } else {
-              Navigator.push(
-                  context, MaterialPageRoute(builder: (context) => Checkout()));
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => const Checkout()));
             }
           }
         },
         child: isLoading
             ? showCircularProgress()
-            : Text("Continue",
+            : const Text("Continue",
                 textAlign: TextAlign.center,
                 style: TextStyle(
                     color: Colors.white,
@@ -125,16 +103,14 @@ class _LocationState extends State<Location> {
             children: [
               Positioned(
                 top: 0,
-                child: Container(
+                child: SizedBox(
                   width: width,
                   height: height,
                 ),
               ),
               appState.loading
-                  ? Container(
-                      child: Center(
-                        child: CircularProgressIndicator(),
-                      ),
+                  ? const Center(
+                      child: CircularProgressIndicator(),
                     )
                   : appState.initialPosition != null
                       ? GoogleMap(
@@ -151,8 +127,8 @@ class _LocationState extends State<Location> {
               Container(
                 width: width,
                 height: 100,
-                //color: Utils.primaryColor,
-                padding: EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+                padding:
+                    const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -162,7 +138,7 @@ class _LocationState extends State<Location> {
                       controller: appState.locationController,
                       textInputAction: TextInputAction.go,
                       onTap: () async {
-                        final sessionToken = Uuid().v4();
+                        final sessionToken = const Uuid().v4();
                         await showSearch(
                           context: context,
                           delegate: AddressSearch(sessionToken),
@@ -171,7 +147,7 @@ class _LocationState extends State<Location> {
                       onSubmitted: (value) {
                         //appState.sendRequest(value);
                       },
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         prefixIcon: Padding(
                           padding: EdgeInsets.all(0.0),
                           child: Icon(Icons.place),
@@ -194,8 +170,8 @@ class _LocationState extends State<Location> {
               Positioned(
                   bottom: 20,
                   child: Padding(
-                      padding:
-                          EdgeInsets.symmetric(vertical: 0, horizontal: 20),
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 0, horizontal: 20),
                       child: continueButton))
             ],
           ),

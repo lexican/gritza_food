@@ -5,6 +5,8 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gritzafood/Utils/Utils.dart';
 
 class ResetScreen extends StatefulWidget {
+  const ResetScreen({Key key}) : super(key: key);
+
   @override
   _ResetScreenState createState() => _ResetScreenState();
 }
@@ -15,7 +17,7 @@ class _ResetScreenState extends State<ResetScreen> {
   bool isLoading = false;
   String err = "";
 
-  final _formKey = new GlobalKey<FormState>();
+  final _formKey =  GlobalKey<FormState>();
 
   bool validateAndSave() {
     final form = _formKey.currentState;
@@ -52,7 +54,6 @@ class _ResetScreenState extends State<ResetScreen> {
           .then((QuerySnapshot querySnapshot) => {
                 if (querySnapshot.size > 0)
                   {
-                    print("Email exist"),
                     auth.sendPasswordResetEmail(email: _email),
                     showCenterShortToast(
                         "A password reset link has been sent to your mail"),
@@ -62,7 +63,7 @@ class _ResetScreenState extends State<ResetScreen> {
                   {showCenterShortToast("Account does not exist")}
               });
     } else {
-      print("Invalid form");
+     // print("Invalid form");
     }
 
     setState(() {
@@ -76,31 +77,32 @@ class _ResetScreenState extends State<ResetScreen> {
       maxLines: 1,
       keyboardType: TextInputType.emailAddress,
       autofocus: false,
-      decoration: new InputDecoration(
+      decoration:  InputDecoration(
           hintText: 'Confirm Password',
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(35.0),
-            borderSide: BorderSide(
+            borderSide: const BorderSide(
               color: Colors.blue,
             ),
           ),
           errorBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.red, width: 1.0),
+            borderSide: const BorderSide(color: Colors.red, width: 1.0),
             borderRadius: BorderRadius.circular(35.0),
           ),
           border: OutlineInputBorder(
             borderSide: BorderSide(color: Utils.primaryColor, width: 1.0),
             borderRadius: BorderRadius.circular(35.0),
           ),
-          contentPadding: EdgeInsets.symmetric(horizontal: 20)),
+          contentPadding: const EdgeInsets.symmetric(horizontal: 20)),
       validator: Utils.validateEmail,
       onSaved: (value) => _email = value.trim(),
     );
 
     return Scaffold(
+      backgroundColor: Utils.backgroundColor,
       appBar: AppBar(
         backgroundColor: Utils.primaryColor,
-        title: Text('Reset Password'),
+        title: const Text('Reset Password'),
       ),
       body: Form(
         key: _formKey,
@@ -117,10 +119,10 @@ class _ResetScreenState extends State<ResetScreen> {
                     style: ElevatedButton.styleFrom(
                         primary: Utils.primaryColor,
                         padding:
-                            EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                        textStyle: TextStyle(
+                            const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                        textStyle: const TextStyle(
                             fontSize: 20, fontWeight: FontWeight.bold)),
-                    child: Text('Reset'),
+                    child: const Text('Reset'),
                     onPressed: () {
                       validateAndSubmit();
                     }),

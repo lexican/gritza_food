@@ -1,37 +1,55 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:gritzafood/screens/location/Location.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:gritzafood/screens/location/location.dart';
+import 'package:gritzafood/screens/welcome/welcome.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SplashScreen extends StatefulWidget {
-  SplashScreen({Key key}) : super(key: key);
+  const SplashScreen({Key key}) : super(key: key);
 
   @override
   _SplashScreenState createState() => _SplashScreenState();
 }
 
 class _SplashScreenState extends State<SplashScreen> {
+  Future checkFirstSeen() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool _seen = (prefs.getBool('seen') ?? false);
+    if (_seen) {
+      Timer(
+          const Duration(seconds: 3),
+          () => Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => const Location(
+                        nextRoute: "Home",
+                      ))));
+    } else {
+      await prefs.setBool('seen', true);
+      Timer(
+          const Duration(seconds: 3),
+          () => Navigator.pushReplacement(context,
+              MaterialPageRoute(builder: (context) => const Welcome())));
+    }
+  }
+
+  @override
   void initState() {
     super.initState();
-    Timer(
-        Duration(seconds: 3),
-        () => Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-                builder: (context) => Location(
-                      nextRoute: "Home",
-                    ))));
+    checkFirstSeen();
   }
 
   @override
   Widget build(BuildContext context) {
     return Container(
-        height: MediaQuery.of(context).size.height,
-        width: MediaQuery.of(context).size.width,
-        decoration: BoxDecoration(
-            image: DecorationImage(
-          image: AssetImage("assets/images/splash_screen.png"),
-          fit: BoxFit.cover,
-        )));
+      color: Colors.white,
+      height: MediaQuery.of(context).size.height,
+      width: MediaQuery.of(context).size.width,
+      child: Center(
+        child: SvgPicture.asset("assets/svg/logo.svg"),
+      ),
+    );
   }
 }

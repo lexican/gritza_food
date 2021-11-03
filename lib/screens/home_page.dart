@@ -4,12 +4,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:gritzafood/api/restaurant_api.dart';
+import 'package:gritzafood/common/rating.dart';
 import 'package:gritzafood/models/category_model.dart';
 import 'package:gritzafood/models/restaurant_model.dart';
+import 'package:gritzafood/screens/cart/cart.dart';
+import 'package:gritzafood/states/map_states.dart';
+import 'package:gritzafood/utils/utils.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
+import 'package:provider/provider.dart';
 
 import 'Restaurant/restaurant_details_page.dart';
 
 class HomePage extends StatefulWidget {
+  const HomePage({Key key}) : super(key: key);
+
   @override
   _HomePageState createState() => _HomePageState();
 }
@@ -17,7 +25,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   TextEditingController searchController = TextEditingController();
 
-  RestaurantApi restaurantApi = new RestaurantApi();
+  RestaurantApi restaurantApi = RestaurantApi();
 
   Stream<QuerySnapshot> getRestaurants() {
     return restaurantApi.streamDataCollection();
@@ -26,8 +34,40 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
-    return Container(
-      child: Column(
+    final appState = Provider.of<MapStates>(context);
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Utils.primaryColor,
+        title: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              "Delivery to",
+              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w300),
+            ),
+            Text(appState.location, style: const TextStyle(fontSize: 18))
+          ],
+        ),
+        actions: [
+          GestureDetector(
+            onTap: () {
+              showMaterialModalBottomSheet(
+                expand: false,
+                context: context,
+                backgroundColor: Colors.transparent,
+                builder: (context) => const CartModal(),
+              );
+            },
+            child: Container(
+              padding: const EdgeInsets.only(right: 10),
+              child: const Icon(Icons.shopping_cart_outlined),
+            ),
+          )
+        ],
+        //body:
+      ),
+      body: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -36,10 +76,10 @@ class _HomePageState extends State<HomePage> {
               stream: getRestaurants(),
               builder: (context, stream) {
                 if (stream.connectionState == ConnectionState.waiting) {
-                  return Container(
+                  return SizedBox(
                       height: height - (70 + 58 + 24 + kToolbarHeight),
                       width: double.infinity,
-                      child: Center(child: CircularProgressIndicator()));
+                      child: const Center(child: CircularProgressIndicator()));
                 }
 
                 if (stream.hasError) {
@@ -48,14 +88,14 @@ class _HomePageState extends State<HomePage> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       SvgPicture.asset("assets/images/internet.svg"),
-                      SizedBox(
+                      const SizedBox(
                         height: 20,
                       ),
-                      Text(
+                      const Text(
                         "No internet Connection",
                         style: TextStyle(fontFamily: "Roboto", fontSize: 18),
                       ),
-                      Text(
+                      const Text(
                         "Your internet connection is currently not available please check or try again.",
                         style: TextStyle(fontFamily: "Roboto", fontSize: 14),
                       ),
@@ -63,9 +103,8 @@ class _HomePageState extends State<HomePage> {
                   ));
                 }
                 if (stream.data.size == 0) {
-                  return Container(
+                  return const SizedBox(
                     width: double.infinity,
-                    //height: height - (35 + 58 + 24 + kToolbarHeight + 80),
                     child: Center(
                       child: Text(
                         "No product found",
@@ -94,7 +133,7 @@ class _HomePageState extends State<HomePage> {
 }
 
 class VerticalScrollView extends StatelessWidget {
-  VerticalScrollView({this.restaurant});
+  const VerticalScrollView({Key key, this.restaurant}) : super(key: key);
   final RestaurantModel restaurant;
 
   @override
@@ -108,7 +147,8 @@ class VerticalScrollView extends StatelessWidget {
                 )));
       },
       child: Container(
-        padding: EdgeInsets.only(bottom: 10, right: 10, left: 10, top: 10),
+        padding:
+            const EdgeInsets.only(bottom: 10, right: 10, left: 10, top: 10),
         child: Card(
           clipBehavior: Clip.antiAlias,
           elevation: 7,
@@ -118,33 +158,32 @@ class VerticalScrollView extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Container(
+              SizedBox(
                 height: 180,
                 width: double.infinity,
                 child: ClipRRect(
-                  borderRadius: BorderRadius.only(
+                  borderRadius: const BorderRadius.only(
                       topLeft: Radius.circular(10.0),
                       topRight: Radius.circular(10.0)),
                   child: CachedNetworkImage(
                     fit: BoxFit.cover,
-                    imageUrl: restaurant.background_url,
-                    placeholder: (context, url) => Container(
+                    imageUrl: restaurant.backgroundUrl,
+                    placeholder: (context, url) => const SizedBox(
                         height: 150,
-                        child:
-                            Center(child: const CircularProgressIndicator())),
+                        child: Center(child: CircularProgressIndicator())),
                     errorWidget: (context, url, error) =>
-                        Center(child: const Icon(Icons.error)),
+                        const Center(child: Icon(Icons.error)),
                     fadeOutDuration: const Duration(seconds: 1),
                     fadeInDuration: const Duration(seconds: 3),
                   ),
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 15,
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 10),
-                child: Text(restaurant.restaurant_name,
+                child: Text(restaurant.restaurantName,
                     style: GoogleFonts.roboto(
                         fontSize: 24, color: Colors.grey[800])),
               ),
@@ -156,27 +195,36 @@ class VerticalScrollView extends StatelessWidget {
                     style: GoogleFonts.roboto(
                         fontSize: 16, color: Colors.grey[600])),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 10,
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 10),
                 child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    Icon(
-                      Icons.star_border,
-                      color: Colors.grey[600],
+                    const Text("4.5",
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: Color(0xFF333333),
+                        )),
+                    const SizedBox(
+                      width: 3,
                     ),
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 10),
-                      child: Text("4.5"),
-                    )
+                    RatingBarIndicator(
+                      itemCount: 5,
+                      rating: 4.5,
+                      itemSize: 15,
+                      itemBuilder: (context, index) {
+                        return const Icon(
+                          Icons.star,
+                          color: Color(0xffF2C946),
+                        );
+                      },
+                    ),
                   ],
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 15,
               )
             ],
@@ -188,7 +236,7 @@ class VerticalScrollView extends StatelessWidget {
 }
 
 class ItemSearchDelegate extends SearchDelegate<CategoryModel> {
-  RestaurantApi restaurantApi = new RestaurantApi();
+  RestaurantApi restaurantApi = RestaurantApi();
   @override
   List<Widget> buildActions(BuildContext context) {
     return [
@@ -196,7 +244,7 @@ class ItemSearchDelegate extends SearchDelegate<CategoryModel> {
         onPressed: () {
           query = "";
         },
-        icon: Icon(Icons.clear),
+        icon: const Icon(Icons.clear),
       )
     ];
   }
@@ -207,7 +255,7 @@ class ItemSearchDelegate extends SearchDelegate<CategoryModel> {
       onPressed: () {
         close(context, null);
       },
-      icon: Icon(Icons.arrow_back),
+      icon: const Icon(Icons.arrow_back),
     );
   }
 
@@ -217,7 +265,7 @@ class ItemSearchDelegate extends SearchDelegate<CategoryModel> {
       stream: restaurantApi.streamDataCollection(),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
-          return Center(
+          return const Center(
             child: CircularProgressIndicator(),
           );
         }
@@ -229,7 +277,7 @@ class ItemSearchDelegate extends SearchDelegate<CategoryModel> {
         final myList = query.isEmpty
             ? items
             : items
-                .where((element) => element.restaurant_name.startsWith(query))
+                .where((element) => element.restaurantName.startsWith(query))
                 .toList();
 
         return ListView.builder(
@@ -241,13 +289,13 @@ class ItemSearchDelegate extends SearchDelegate<CategoryModel> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    restaurantmodel.restaurant_name,
-                    style: TextStyle(
+                    restaurantmodel.restaurantName,
+                    style: const TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
                         color: Color(0xff212121)),
                   ),
-                  Divider()
+                  const Divider()
                 ],
               ),
             );
@@ -264,7 +312,7 @@ class ItemSearchDelegate extends SearchDelegate<CategoryModel> {
         stream: restaurantApi.streamDataCollection(),
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
-            return Center(
+            return const Center(
               child: CircularProgressIndicator(),
             );
           }
@@ -276,7 +324,7 @@ class ItemSearchDelegate extends SearchDelegate<CategoryModel> {
           final myList = query.isEmpty
               ? items
               : items
-                  .where((element) => element.restaurant_name
+                  .where((element) => element.restaurantName
                       .toUpperCase()
                       .contains(query.toUpperCase()))
                   .toList();
@@ -284,8 +332,9 @@ class ItemSearchDelegate extends SearchDelegate<CategoryModel> {
           return myList.isEmpty
               ? Container(
                   width: width,
-                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-                  child: Center(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+                  child: const Center(
                     child: Text(
                       "No Result Found",
                       style: TextStyle(fontSize: 16),
@@ -306,8 +355,8 @@ class ItemSearchDelegate extends SearchDelegate<CategoryModel> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            restaurantmodel.restaurant_name,
-                            style: TextStyle(
+                            restaurantmodel.restaurantName,
+                            style: const TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.w600,
                                 color: Color(0xff212121)),

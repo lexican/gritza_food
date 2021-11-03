@@ -5,14 +5,12 @@ import 'package:gritzafood/models/restaurant_model.dart';
 import 'package:uuid/uuid.dart';
 
 class CartState with ChangeNotifier, DiagnosticableTreeMixin {
-  var uuid = Uuid();
-  int _count = 0;
+  var uuid = const Uuid();
   List<CategoriesSubModel> _cartitems = [];
   double _total = 0.0;
 
   RestaurantModel _restaurantDetails;
 
-  int get count => _count;
   List<CategoriesSubModel> get cartitems => _cartitems;
   double get total => _total;
 
@@ -26,7 +24,6 @@ class CartState with ChangeNotifier, DiagnosticableTreeMixin {
   }
 
   void removeItem(CategoriesSubModel item) {
-    print('remove id' + item.cartId);
     var tempProducts = [..._cartitems];
     int index = -1;
     for (int i = 0; i < tempProducts.length; i++) {
@@ -44,7 +41,6 @@ class CartState with ChangeNotifier, DiagnosticableTreeMixin {
   }
 
   void setRestuarantDetails(RestaurantModel item) {
-    print("Setting RestaurantModel: " + item.toString());
     _restaurantDetails = item;
     notifyListeners();
   }
@@ -52,7 +48,7 @@ class CartState with ChangeNotifier, DiagnosticableTreeMixin {
   void incrementQuantity(id) {
     var tempCart = [..._cartitems];
     CategoriesSubModel cartItemToIncrement;
-    if (tempCart.length > 0) {
+    if (tempCart.isNotEmpty) {
       for (int i = 0; i < tempCart.length; i++) {
         if (tempCart[i].cartId == id) {
           cartItemToIncrement = tempCart[i];
@@ -74,7 +70,7 @@ class CartState with ChangeNotifier, DiagnosticableTreeMixin {
   void decrementQuantity(id) {
     var tempCart = [..._cartitems];
     CategoriesSubModel cartItemToIncrement;
-    if (tempCart.length > 0) {
+    if (tempCart.isNotEmpty) {
       for (int i = 0; i < tempCart.length; i++) {
         if (tempCart[i].cartId == id) {
           cartItemToIncrement = tempCart[i];
@@ -88,7 +84,6 @@ class CartState with ChangeNotifier, DiagnosticableTreeMixin {
         if (product.quantity == 0) {
           cartitems.remove(product);
           _restaurantDetails = null;
-          //removeItem(id);
         } else {
           product.total = (product.quantity * product.price).toDouble();
           _cartitems = [...tempCart];
@@ -101,12 +96,11 @@ class CartState with ChangeNotifier, DiagnosticableTreeMixin {
 
   void addTotal() {
     var totalx = 0.0;
-    if (_cartitems.length > 0) {
+    if (_cartitems.isNotEmpty) {
       for (int i = 0; i < _cartitems.length; i++) {
         totalx = totalx + _cartitems[i].total;
       }
     }
-    print('Total: ' + totalx.toString());
     _total = totalx;
     notifyListeners();
   }
@@ -115,11 +109,5 @@ class CartState with ChangeNotifier, DiagnosticableTreeMixin {
     _cartitems.clear();
     addTotal();
     notifyListeners();
-  }
-
-  @override
-  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    super.debugFillProperties(properties);
-    properties.add(IntProperty('count', count));
   }
 }

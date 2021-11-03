@@ -2,22 +2,22 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:gritzafood/models/Order.dart';
-import 'package:gritzafood/Utils/Utils.dart';
+import 'package:gritzafood/Utils/utils.dart';
 import 'package:gritzafood/api/order_api.dart';
+import 'package:gritzafood/models/Order.dart';
 import 'package:gritzafood/models/categories_sub_model.dart';
 
 class OrderFullPage extends StatefulWidget {
   final String id;
   final Order order;
-  OrderFullPage({Key key, this.id, this.order}) : super(key: key);
+  const OrderFullPage({Key key, this.id, this.order}) : super(key: key);
 
   @override
   _OrderFullPageState createState() => _OrderFullPageState();
 }
 
 class _OrderFullPageState extends State<OrderFullPage> {
-  OrderApi orderApi = new OrderApi();
+  OrderApi orderApi = OrderApi();
   String id = "";
   Order order;
   Color color;
@@ -34,9 +34,9 @@ class _OrderFullPageState extends State<OrderFullPage> {
     if (widget.order.status == "Pending") {
       color = Colors.yellow;
     } else if (widget.order.status == "Confirmed") {
-      color = Utils.status_confirmed;
+      color = Utils.statusConfirmed;
     } else {
-      color = Utils.status_cacelled;
+      color = Utils.statusCancelled;
     }
   }
 
@@ -45,13 +45,14 @@ class _OrderFullPageState extends State<OrderFullPage> {
     var height = MediaQuery.of(context).size.height;
     return SafeArea(
       child: Scaffold(
+        backgroundColor: Utils.backgroundColor,
         appBar: AppBar(
           backgroundColor: Utils.primaryColor,
           leading: IconButton(
             onPressed: () {
               Navigator.of(context).pop();
             },
-            icon: Icon(Icons.close),
+            icon: const Icon(Icons.close),
           ),
           title: Text(
             "Order Full Page",
@@ -59,7 +60,7 @@ class _OrderFullPageState extends State<OrderFullPage> {
                 fontSize: 18, color: Colors.white, fontWeight: FontWeight.bold),
           ),
         ),
-        body: Container(
+        body: SizedBox(
           height: MediaQuery.of(context).size.height,
           width: MediaQuery.of(context).size.width,
           child: Column(
@@ -69,16 +70,17 @@ class _OrderFullPageState extends State<OrderFullPage> {
                   stream: getRestaurants(),
                   builder: (context, stream) {
                     if (stream.connectionState == ConnectionState.waiting) {
-                      return Container(
+                      return SizedBox(
                           height: height - (58 + 24 + kToolbarHeight),
                           width: double.infinity,
-                          child: Center(child: CircularProgressIndicator()));
+                          child:
+                              const Center(child: CircularProgressIndicator()));
                     }
                     if (stream.hasError) {
                       return Center(child: Text(stream.error.toString()));
                     }
                     if (stream.data.size == 0) {
-                      return Container(
+                      return const SizedBox(
                         width: double.infinity,
                         child: Center(
                           child: Text(
@@ -105,22 +107,24 @@ class _OrderFullPageState extends State<OrderFullPage> {
                 ),
               ),
               Container(
-                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                color: Color(0XFFeeeeee),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                color: Colors.white,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
+                    const Text(
                       "Total:",
                       style: TextStyle(
                           fontSize: 18,
-                          color: Colors.black,
+                          color: Color(0xFF333333),
                           fontWeight: FontWeight.bold),
                     ),
                     Text(
-                      "${"\u20A6" + Utils.moneyFormat(order.total.toInt().toString())}",
-                      style: TextStyle(
-                          color: Color(0xFF686868),
+                      "\u20A6" +
+                          Utils.moneyFormat(order.total.toInt().toString()),
+                      style: const TextStyle(
+                          color: Color(0xFF9E9E9E),
                           fontSize: 18,
                           fontWeight: FontWeight.bold
                           //fontWeight: FontWeight.w800
@@ -130,25 +134,26 @@ class _OrderFullPageState extends State<OrderFullPage> {
                 ),
               ),
               Container(
-                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                color: Color(0XFFeeeeee),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                color: Colors.white,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
+                    const Text(
                       "Status:",
                       style: TextStyle(
                           fontSize: 18,
-                          color: Colors.black,
+                          color: Color(0xFF333333),
                           fontWeight: FontWeight.bold),
                     ),
                     Container(
-                      padding: EdgeInsets.symmetric(horizontal: 10),
+                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
                       decoration: BoxDecoration(
                           color: color, borderRadius: BorderRadius.circular(4)),
                       child: Text(
                         order.status,
-                        style: TextStyle(color: Utils.darkGray, fontSize: 16),
+                        style: TextStyle(color: Utils.darkGray, fontSize: 12),
                       ),
                     )
                   ],
@@ -183,22 +188,24 @@ class _CategoryItemState extends State<CategoryItem> {
     return GestureDetector(
       onTap: () {},
       child: Container(
-        padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
         height: 140,
+        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+        margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+        decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(20)),
         width: double.infinity,
         child: Row(
           children: [
             ClipRRect(
-              borderRadius: BorderRadius.circular(0),
-              child: Container(
+              borderRadius: BorderRadius.circular(10),
+              child: SizedBox(
                 width: 85,
                 height: 200,
                 child: CachedNetworkImage(
                   fit: BoxFit.cover,
-                  imageUrl: categoriesSubModel.image_url,
-                  placeholder: (context, url) => Container(
+                  imageUrl: categoriesSubModel.imageUrl,
+                  placeholder: (context, url) => const SizedBox(
                       height: 120,
-                      child: Center(child: const CircularProgressIndicator())),
+                      child: Center(child: CircularProgressIndicator())),
                   errorWidget: (context, url, error) => Center(
                       child: Container(
                     color: Colors.white,
@@ -209,7 +216,7 @@ class _CategoryItemState extends State<CategoryItem> {
                 ),
               ),
             ),
-            SizedBox(
+            const SizedBox(
               width: 15,
             ),
             Expanded(
@@ -217,7 +224,7 @@ class _CategoryItemState extends State<CategoryItem> {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Container(
+                SizedBox(
                   height: 20,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -247,7 +254,7 @@ class _CategoryItemState extends State<CategoryItem> {
                         fontSize: 14, color: Utils.lightGray),
                   ),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 4,
                 ),
                 Text(
@@ -255,7 +262,7 @@ class _CategoryItemState extends State<CategoryItem> {
                   style:
                       GoogleFonts.roboto(fontSize: 16, color: Utils.lightGray),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 4,
                 ),
                 Text(
@@ -264,7 +271,7 @@ class _CategoryItemState extends State<CategoryItem> {
                   style:
                       GoogleFonts.roboto(fontSize: 16, color: Utils.lightGray),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 4,
                 ),
               ],

@@ -1,16 +1,19 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:gritzafood/models/Order.dart';
-import 'package:gritzafood/Utils/Utils.dart';
 import 'package:gritzafood/api/order_api.dart';
+import 'package:gritzafood/models/Order.dart';
 import 'package:gritzafood/screens/order/order_full_page.dart';
+import 'package:gritzafood/screens/order/widget/empty_order.dart';
+import 'package:gritzafood/utils/utils.dart';
 import 'package:intl/intl.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 class OrderPage extends StatefulWidget {
+  const OrderPage({Key key}) : super(key: key);
+
   @override
   _OrderPageState createState() => _OrderPageState();
 }
@@ -20,14 +23,14 @@ class _OrderPageState extends State<OrderPage>
   TabController _controller;
 
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  OrderApi orderApi = new OrderApi();
+  OrderApi orderApi = OrderApi();
 
   User currentUser;
 
   @override
   void initState() {
     super.initState();
-    _controller = new TabController(length: 3, vsync: this);
+    _controller = TabController(length: 3, vsync: this);
     currentUser = _auth.currentUser;
   }
 
@@ -35,18 +38,19 @@ class _OrderPageState extends State<OrderPage>
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
     return Scaffold(
+      backgroundColor: Utils.backgroundColor,
       appBar: AppBar(
         backgroundColor: Utils.primaryColor,
         title: Text(
-          "Orders",
+          "Order History",
           style: GoogleFonts.roboto(
               fontSize: 18, color: Colors.white, fontWeight: FontWeight.bold),
         ),
         bottom: TabBar(
-          labelColor: Color(0xffFFFFFF),
-          indicatorColor: Color(0xffFFFFFF),
+          labelColor: const Color(0xffFFFFFF),
+          indicatorColor: const Color(0xffFFFFFF),
           controller: _controller,
-          tabs: [
+          tabs: const [
             Tab(
               text: 'All',
             ),
@@ -66,37 +70,21 @@ class _OrderPageState extends State<OrderPage>
             stream: getOrders("All"),
             builder: (context, stream) {
               if (stream.connectionState == ConnectionState.waiting) {
-                return Container(
+                return SizedBox(
                     height: height - (35 + 58 + 24 + kToolbarHeight),
                     width: double.infinity,
-                    child: Center(child: CircularProgressIndicator()));
+                    child: const Center(child: CircularProgressIndicator()));
               }
 
               if (stream.hasError) {
                 return Center(child: Text(stream.error.toString()));
               }
               if (stream.data.size == 0) {
-                return Container(
-                    color: Color(0xfffafafa),
-                    width: double.infinity,
-                    height: height - (35 + 58 + 24 + kToolbarHeight),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        SvgPicture.asset("assets/images/cart.svg"),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        Text(
-                          "No orders yet",
-                          style: TextStyle(fontFamily: "Roboto", fontSize: 18),
-                        ),
-                      ],
-                    ));
+                return const EmptyOrder();
               }
               QuerySnapshot querySnapshot = stream.data;
               return Container(
-                color: Color(0xfffafafa),
+                color: const Color(0xfffafafa),
                 width: double.infinity,
                 child: ListView.builder(
                     //reverse: true,
@@ -115,32 +103,17 @@ class _OrderPageState extends State<OrderPage>
             stream: getOrders("Pending"),
             builder: (context, stream) {
               if (stream.connectionState == ConnectionState.waiting) {
-                return Container(
+                return SizedBox(
                     height: height - (35 + 58 + 24 + kToolbarHeight),
                     width: double.infinity,
-                    child: Center(child: CircularProgressIndicator()));
+                    child: const Center(child: CircularProgressIndicator()));
               }
 
               if (stream.hasError) {
                 return Center(child: Text(stream.error.toString()));
               }
               if (stream.data.size == 0) {
-                return Container(
-                    width: double.infinity,
-                    height: height - (35 + 58 + 24 + kToolbarHeight),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        SvgPicture.asset("assets/images/cart.svg"),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        Text(
-                          "No orders yet",
-                          style: TextStyle(fontFamily: "Roboto", fontSize: 18),
-                        ),
-                      ],
-                    ));
+                return const EmptyOrder();
               }
               QuerySnapshot querySnapshot = stream.data;
               return ListView.builder(
@@ -158,32 +131,17 @@ class _OrderPageState extends State<OrderPage>
             stream: getOrders("Completed"),
             builder: (context, stream) {
               if (stream.connectionState == ConnectionState.waiting) {
-                return Container(
+                return SizedBox(
                     height: height - (35 + 58 + 24 + kToolbarHeight),
                     width: double.infinity,
-                    child: Center(child: CircularProgressIndicator()));
+                    child: const Center(child: CircularProgressIndicator()));
               }
 
               if (stream.hasError) {
                 return Center(child: Text(stream.error.toString()));
               }
               if (stream.data.size == 0) {
-                return Container(
-                    width: double.infinity,
-                    height: height - (35 + 58 + 24 + kToolbarHeight),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        SvgPicture.asset("assets/images/cart.svg"),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        Text(
-                          "No orders yet",
-                          style: TextStyle(fontFamily: "Roboto", fontSize: 18),
-                        ),
-                      ],
-                    ));
+                return const EmptyOrder();
               }
               QuerySnapshot querySnapshot = stream.data;
               return ListView.builder(
@@ -206,12 +164,10 @@ class _OrderPageState extends State<OrderPage>
     if (s == "Pending") {
       return orderApi.getDocumentByUserIdAndStatus(currentUser.uid, "Pending");
     } else if (s == "Completed") {
-      print(s);
       return orderApi.getDocumentByUserIdAndStatus(
           currentUser.uid, "Completed");
     }
     return orderApi.getDocumentByUserId(currentUser.uid);
-    //return orderApi.streamDataCollection();
   }
 }
 
@@ -228,6 +184,7 @@ class _OrderitemState extends State<Orderitem> {
   String deliveryAddress = "";
   String formattedDateTime = "";
   Color color;
+
   @override
   void initState() {
     super.initState();
@@ -235,15 +192,22 @@ class _OrderitemState extends State<Orderitem> {
     formattedDateTime =
         DateFormat('yyyy-MM-dd').format(widget.order.date.toDate());
 
-    //print('$formattedDateTime');
-
     if (widget.order.status == "Pending") {
       color = Colors.yellow;
     } else if (widget.order.status == "Confirmed") {
-      color = Utils.status_confirmed;
+      color = Utils.statusConfirmed;
     } else {
-      color = Utils.status_cacelled;
+      color = Utils.statusCancelled;
     }
+    getaddress();
+  }
+
+  void getaddress() async {
+    List<Placemark> placemark =
+        await Geolocator().placemarkFromCoordinates(order.lat, order.lng);
+    setState(() {
+      deliveryAddress = placemark[0].name;
+    });
   }
 
   @override
@@ -258,44 +222,110 @@ class _OrderitemState extends State<Orderitem> {
         );
       },
       child: Container(
-        margin: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-        padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+        margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
         decoration: BoxDecoration(
             color: Colors.white, borderRadius: BorderRadius.circular(10)),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              "Ref No.: " + order.reference,
-              style: TextStyle(color: Utils.darkGray, fontSize: 16),
+            Row(
+              children: [
+                const Text(
+                  "Ref No: ",
+                  style: TextStyle(
+                    color: Color(0xFF333333),
+                    fontSize: 14,
+                  ),
+                ),
+                const SizedBox(
+                  width: 6,
+                ),
+                Text(
+                  order.reference,
+                  style: const TextStyle(
+                    color: Color(0xFF9E9E9E),
+                    fontSize: 14,
+                  ),
+                ),
+              ],
             ),
-            SizedBox(
-              height: 5,
+            const SizedBox(
+              height: 8,
             ),
-            Text(
-              "Delivery Address: " + deliveryAddress,
-              style: TextStyle(color: Utils.darkGray, fontSize: 16),
+            Row(
+              children: [
+                const Text(
+                  "Delivery Address: ",
+                  style: TextStyle(
+                    color: Color(0xFF333333),
+                    fontSize: 14,
+                  ),
+                ),
+                const SizedBox(
+                  width: 6,
+                ),
+                Text(
+                  deliveryAddress,
+                  style: const TextStyle(
+                    color: Color(0xFF9E9E9E),
+                    fontSize: 14,
+                  ),
+                ),
+              ],
             ),
-            SizedBox(
-              height: 5,
+            const SizedBox(
+              height: 8,
             ),
-            Text(
-              formattedDateTime,
-              style: TextStyle(color: Utils.darkGray, fontSize: 16),
+            Row(
+              children: [
+                const Text(
+                  "Date: ",
+                  style: TextStyle(
+                    color: Color(0xFF333333),
+                    fontSize: 14,
+                  ),
+                ),
+                const SizedBox(
+                  width: 6,
+                ),
+                Text(
+                  formattedDateTime,
+                  style: const TextStyle(
+                    color: Color(0xFF9E9E9E),
+                    fontSize: 14,
+                  ),
+                ),
+              ],
             ),
-            SizedBox(
-              height: 5,
+            const SizedBox(
+              height: 8,
             ),
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: 10),
-              decoration: BoxDecoration(
-                  color: color, borderRadius: BorderRadius.circular(4)),
-              child: Text(
-                order.status,
-                style: TextStyle(color: Utils.darkGray, fontSize: 16),
-              ),
-            )
+            Row(
+              children: [
+                const Text(
+                  "Status: ",
+                  style: TextStyle(
+                    color: Color(0xFF333333),
+                    fontSize: 14,
+                  ),
+                ),
+                const SizedBox(
+                  width: 6,
+                ),
+                Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
+                  decoration: BoxDecoration(
+                      color: color, borderRadius: BorderRadius.circular(4)),
+                  child: Text(
+                    order.status,
+                    style: TextStyle(color: Utils.darkGray, fontSize: 12),
+                  ),
+                )
+              ],
+            ),
           ],
         ),
       ),

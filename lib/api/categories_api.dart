@@ -43,7 +43,7 @@ class CategoriesApi {
     return qShot.docs
         .map((doc) => CategoriesSubModel(
             price: doc['price'],
-            image_url: doc['image_url'],
+            imageUrl: doc['image_url'],
             description: doc['description'],
             id: doc.id,
             name: doc['name']))

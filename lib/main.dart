@@ -1,12 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_config/flutter_config.dart';
 import 'package:gritzafood/screens/splash_screens.dart';
 import 'package:gritzafood/states/cart_state.dart';
 import 'package:gritzafood/states/map_states.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_config/flutter_config.dart';
 
+// ignore: non_constant_identifier_names
 bool USE_FIRESTORE_EMULATOR = false;
 
 Future<void> main() async {
@@ -26,12 +27,14 @@ Future<void> main() async {
         ChangeNotifierProvider(create: (_) => MapStates()),
         ChangeNotifierProvider(create: (_) => CartState()),
       ],
-      child: MyApp(),
+      child: const MyApp(),
     ),
   );
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({Key key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -41,7 +44,7 @@ class MyApp extends StatelessWidget {
             focus.focusedChild.unfocus();
           }
         },
-        child: MaterialApp(
+        child: const MaterialApp(
             title: 'Flutter Demo',
             debugShowCheckedModeBanner: false,
             home: SplashScreen()));

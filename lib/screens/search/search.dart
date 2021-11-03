@@ -3,11 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:gritzafood/api/restaurant_api.dart';
 import 'package:gritzafood/models/category_model.dart';
 import 'package:gritzafood/models/restaurant_model.dart';
+import 'package:gritzafood/screens/cart/cart.dart';
 import 'package:gritzafood/screens/restaurant/restaurant_details_page.dart';
+import 'package:gritzafood/states/map_states.dart';
 import 'package:gritzafood/utils/utils.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
+import 'package:provider/provider.dart';
 
 class Search extends StatefulWidget {
-  Search({Key key}) : super(key: key);
+  const Search({Key key}) : super(key: key);
 
   @override
   _SearchState createState() => _SearchState();
@@ -17,57 +21,91 @@ class _SearchState extends State<Search> {
   TextEditingController searchController = TextEditingController();
   @override
   Widget build(BuildContext context) {
+    final appState = Provider.of<MapStates>(context);
     return Scaffold(
-      body: Container(
-        child: Column(
+      backgroundColor: Utils.backgroundColor,
+      appBar: AppBar(
+        backgroundColor: Utils.primaryColor,
+        title: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-              child: TextField(
-                cursorColor: Colors.black,
-                controller: searchController,
-                textInputAction: TextInputAction.go,
-                onTap: () async {
-                  showSearch(context: context, delegate: ItemSearchDelegate());
-                },
-                onSubmitted: (value) {},
-                decoration: InputDecoration(
-                  border: new OutlineInputBorder(
-                    borderRadius: const BorderRadius.all(
-                      const Radius.circular(30.0),
-                    ),
+            const Text(
+              "Delivery to",
+              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w300),
+            ),
+            Text(appState.location, style: const TextStyle(fontSize: 18))
+          ],
+        ),
+        actions: [
+          GestureDetector(
+            onTap: () {
+              showMaterialModalBottomSheet(
+                expand: false,
+                context: context,
+                backgroundColor: Colors.transparent,
+                builder: (context) => const CartModal(),
+              );
+            },
+            child: Container(
+              padding: const EdgeInsets.only(right: 10),
+              child: const Icon(Icons.shopping_cart_outlined),
+            ),
+          )
+        ],
+        //body:
+      ),
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+            child: TextField(
+              cursorColor: Colors.black,
+              controller: searchController,
+              textInputAction: TextInputAction.go,
+              onTap: () async {
+                showSearch(context: context, delegate: ItemSearchDelegate());
+              },
+              onSubmitted: (value) {},
+              decoration: InputDecoration(
+                prefixIcon: Padding(
+                  padding: const EdgeInsets.all(0.0),
+                  child: Icon(
+                    Icons.search,
+                    color: Utils.lightGray,
                   ),
-                  prefixIcon: Padding(
-                    padding: EdgeInsets.all(0.0),
-                    child: Icon(
-                      Icons.search,
-                      color: Utils.lightGray,
-                    ),
+                ),
+                hintText: "Search",
+                // fillColor: const Color(0XFFfeeeee),
+                // filled: true,
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(35.0),
+                  borderSide: const BorderSide(
+                    color: Colors.blue,
                   ),
-                  hintText: "Search",
-                  // border: InputBorder.none,
-                  fillColor: Color(0XFFfeeeeee),
-                  filled: true,
-                  contentPadding: EdgeInsets.only(
-                    left: 15.0,
-                    top: 14,
+                ),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(35.0),
+                  borderSide: BorderSide(
+                    color: Utils.lightGray,
+                    width: 1.0,
                   ),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Utils.lightGray, width: 2.0),
-                    borderRadius: BorderRadius.circular(25.0),
-                  ),
+                ),
+                contentPadding: const EdgeInsets.only(
+                  left: 15.0,
+                  top: 14,
                 ),
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
 }
 
 class ItemSearchDelegate extends SearchDelegate<CategoryModel> {
-  RestaurantApi restaurantApi = new RestaurantApi();
+  RestaurantApi restaurantApi = RestaurantApi();
   @override
   List<Widget> buildActions(BuildContext context) {
     return [
@@ -75,7 +113,7 @@ class ItemSearchDelegate extends SearchDelegate<CategoryModel> {
         onPressed: () {
           query = "";
         },
-        icon: Icon(Icons.clear),
+        icon: const Icon(Icons.clear),
       )
     ];
   }
@@ -86,7 +124,7 @@ class ItemSearchDelegate extends SearchDelegate<CategoryModel> {
       onPressed: () {
         close(context, null);
       },
-      icon: Icon(Icons.arrow_back),
+      icon: const Icon(Icons.arrow_back),
     );
   }
 
@@ -96,7 +134,7 @@ class ItemSearchDelegate extends SearchDelegate<CategoryModel> {
       stream: restaurantApi.streamDataCollection(),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
-          return Center(
+          return const Center(
             child: CircularProgressIndicator(),
           );
         }
@@ -108,7 +146,7 @@ class ItemSearchDelegate extends SearchDelegate<CategoryModel> {
         final myList = query.isEmpty
             ? items
             : items
-                .where((element) => element.restaurant_name.startsWith(query))
+                .where((element) => element.restaurantName.startsWith(query))
                 .toList();
 
         return ListView.builder(
@@ -120,13 +158,13 @@ class ItemSearchDelegate extends SearchDelegate<CategoryModel> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    restaurantmodel.restaurant_name,
-                    style: TextStyle(
+                    restaurantmodel.restaurantName,
+                    style: const TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
                         color: Color(0xff212121)),
                   ),
-                  Divider()
+                  const Divider()
                 ],
               ),
             );
@@ -143,7 +181,7 @@ class ItemSearchDelegate extends SearchDelegate<CategoryModel> {
         stream: restaurantApi.streamDataCollection(),
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
-            return Center(
+            return const Center(
               child: CircularProgressIndicator(),
             );
           }
@@ -155,7 +193,7 @@ class ItemSearchDelegate extends SearchDelegate<CategoryModel> {
           final myList = query.isEmpty
               ? items
               : items
-                  .where((element) => element.restaurant_name
+                  .where((element) => element.restaurantName
                       .toUpperCase()
                       .contains(query.toUpperCase()))
                   .toList();
@@ -163,8 +201,9 @@ class ItemSearchDelegate extends SearchDelegate<CategoryModel> {
           return myList.isEmpty
               ? Container(
                   width: width,
-                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-                  child: Center(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+                  child: const Center(
                     child: Text(
                       "No Result Found",
                       style: TextStyle(fontSize: 16),
@@ -185,8 +224,8 @@ class ItemSearchDelegate extends SearchDelegate<CategoryModel> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            restaurantmodel.restaurant_name,
-                            style: TextStyle(
+                            restaurantmodel.restaurantName,
+                            style: const TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.w600,
                                 color: Color(0xff212121)),

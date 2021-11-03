@@ -50,9 +50,11 @@ dependencies:
   firebase_storage: ^9.0.0
   flutter_config: ^2.0.0
   flutter_svg: ^0.22.0
+  dots_indicator: ^0.0.4
 
 
 dev_dependencies:
+  flutter_lints: ^1.0.4
   flutter_test:
     sdk: flutter
 
@@ -80,6 +82,16 @@ flutter:
     - assets/images/user.jpg
     - assets/images/splash_screen.png
     - assets/images/cart.svg
+    - assets/icon/home.svg
+    - assets/icon/profile.svg
+    - assets/icon/order.svg
+    - assets/icon/search.svg
+    - assets/svg/logo.svg
+    - assets/images/choose_restaurant.png
+    - assets/images/delivery.png
+    - assets/images/meal.png
+    - assets/svg/cart.svg
+    - assets/svg/empty_order.svg
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

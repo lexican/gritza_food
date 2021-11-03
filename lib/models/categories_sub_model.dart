@@ -5,7 +5,7 @@ class CategoriesSubModel {
   String description;
   int price;
   String id;
-  String image_url;
+  String imageUrl;
   int quantity;
   double total;
   bool available;
@@ -16,7 +16,7 @@ class CategoriesSubModel {
       this.description,
       this.price,
       this.id,
-      this.image_url,
+      this.imageUrl,
       this.quantity,
       this.total,
       this.available,
@@ -29,17 +29,16 @@ class CategoriesSubModel {
         description: getDocs['description'],
         id: snapshot.id,
         price: getDocs['price'],
-        image_url: getDocs['image_url'],
+        imageUrl: getDocs['image_url'],
         quantity: 1,
         total: getDocs['price'].toDouble());
   }
 
   Map<dynamic, dynamic> toJson() => {
-        //'id': id,
         'name': name,
         'description': description,
         'price': price,
-        'image_url': image_url,
+        'image_url': imageUrl,
         'available': available,
         'quantity': quantity,
         'total': total,

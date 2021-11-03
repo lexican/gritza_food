@@ -13,7 +13,8 @@ import 'package:gritzafood/Utils/Utils.dart';
 import 'package:gritzafood/api/order_api.dart';
 import 'package:gritzafood/models/categories_sub_model.dart';
 import 'package:gritzafood/screens/auth/home.dart';
-import 'package:gritzafood/screens/location/Location.dart';
+import 'package:gritzafood/screens/cart/widget/empty_cart.dart';
+import 'package:gritzafood/screens/location/location.dart';
 import 'package:gritzafood/states/cart_state.dart';
 import 'package:gritzafood/states/map_states.dart';
 import 'package:provider/provider.dart';
@@ -29,10 +30,10 @@ class Checkout extends StatefulWidget {
 class _CheckoutState extends State<Checkout> {
   CategoriesSubModel categoriesSubModel;
   int quantity = 1;
-  Random random = new Random();
+  Random random = Random();
 
   var publicKey = FlutterConfig.get('PAYSTACK_PUBLIC_KEY').toString();
-  var sk_test = FlutterConfig.get('PAYSTACK_TEST_KEY').toString();
+  var skTest = FlutterConfig.get('PAYSTACK_TEST_KEY').toString();
 
   bool isGeneratingCode = false;
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -59,27 +60,26 @@ class _CheckoutState extends State<Checkout> {
     }
   }
 
-  chargeCard(double total, deliveryFee, context, cartState, appState) async {
+  void chargeCard(
+      double total, deliveryFee, context, cartState, appState) async {
     List<CategoriesSubModel> items = cartState.cartitems;
-    OrderApi orderApi = new OrderApi();
-    // final cartState = Provider.of<CartState>(context, listen: false);
-    // final appState = Provider.of<MapStates>(context);
+    OrderApi orderApi = OrderApi();
     setState(() {
       isGeneratingCode = !isGeneratingCode;
     });
     User currentUser = _auth.currentUser;
-    Map accessCode = await createAccessCode(sk_test, total, currentUser.email);
+    Map accessCode = await createAccessCode(skTest, total, currentUser.email);
 
-    print("accessCod: " + accessCode.toString());
+    //print("accessCode: " + accessCode.toString());
 
     setState(() {
       isGeneratingCode = !isGeneratingCode;
     });
-    if (this.mounted) {
+    if (mounted) {
       Charge charge = Charge()
         ..amount = (total.toInt() + deliveryFee.toInt()) * 100
         ..accessCode = accessCode["data"]["access_code"]
-        ..email = 'miamilexican@gmail.com';
+        ..email = currentUser.email;
       CheckoutResponse response = await plugin.checkout(
         context,
         //method: CheckoutMethod.bank, // Defaults to CheckoutMethod.selectable
@@ -89,12 +89,6 @@ class _CheckoutState extends State<Checkout> {
       final reference = response.reference;
 
       if (response.status == true) {
-        print("Payment confirmed");
-        print("Reference: $reference");
-
-        //bloc.cartListSink.
-        User currentUser = _auth.currentUser;
-
         orderApi.addDocument({
           'userId': FirebaseFirestore.instance
               .collection("users")
@@ -103,19 +97,19 @@ class _CheckoutState extends State<Checkout> {
           'lng': appState.lastPosition.longitude,
           'status': 'Pending',
           'reference': reference,
-          'date': new DateTime.now(),
+          'date': DateTime.now(),
           'deliveryFee': deliveryFee,
           'total': total + deliveryFee,
           'restaurantId': cartState.restaurantDetails.id
         }).then((docRef) => {
-              print("docRef: " + docRef.id),
+              // print("docRef: " + docRef.id),
               for (var i = 0; i < items.length; i++)
                 {
                   orderApi.addSubDocuments({
                     'name': items[i].name,
                     'description': items[i].description,
                     'price': items[i].price,
-                    'image_url': items[i].image_url,
+                    'image_url': items[i].imageUrl,
                     'available': items[i].available,
                     'quantity': items[i].quantity,
                     'total': items[i].total
@@ -134,7 +128,7 @@ class _CheckoutState extends State<Checkout> {
         cartState.removeAll();
         Navigator.pushAndRemoveUntil(
             context,
-            MaterialPageRoute(builder: (context) => Home()),
+            MaterialPageRoute(builder: (context) => const Home()),
             (Route<dynamic> route) => false);
       } else {
         _showErrorDialog();
@@ -143,7 +137,6 @@ class _CheckoutState extends State<Checkout> {
   }
 
   void _showErrorDialog() {
-    // flutter defined function
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -156,7 +149,7 @@ class _CheckoutState extends State<Checkout> {
     return Dialog(
       shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(5.0)), //this right here
-      child: Container(
+      child: SizedBox(
         height: 350.0,
         width: MediaQuery.of(context).size.width,
         child: Padding(
@@ -164,7 +157,7 @@ class _CheckoutState extends State<Checkout> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
+            children: const <Widget>[
               Icon(
                 Icons.cancel,
                 color: Colors.red,
@@ -196,7 +189,7 @@ class _CheckoutState extends State<Checkout> {
     return Dialog(
       shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(5.0)), //this right here
-      child: Container(
+      child: SizedBox(
         height: 350.0,
         width: MediaQuery.of(context).size.width,
         child: Padding(
@@ -204,7 +197,7 @@ class _CheckoutState extends State<Checkout> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
+            children: const <Widget>[
               Icon(
                 Icons.check_box,
                 color: Color(0XFF41aa5e),
@@ -239,7 +232,6 @@ class _CheckoutState extends State<Checkout> {
   }
 
   void _showDialog() {
-    // flutter defined function
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -283,7 +275,7 @@ class _CheckoutState extends State<Checkout> {
             Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => Location(
+                    builder: (context) => const Location(
                           nextRoute: "Checkout",
                         )));
           },
@@ -291,11 +283,11 @@ class _CheckoutState extends State<Checkout> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
+              const Text(
                 "Delivery to",
                 style: TextStyle(fontSize: 14, fontWeight: FontWeight.w300),
               ),
-              Text(appState.location, style: TextStyle(fontSize: 18))
+              Text(appState.location, style: const TextStyle(fontSize: 18))
             ],
           ),
         ),
@@ -305,12 +297,12 @@ class _CheckoutState extends State<Checkout> {
         child: Container(
           height: MediaQuery.of(context).size.height,
           width: MediaQuery.of(context).size.width,
-          padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
               Expanded(
-                  child: cartState.cartitems.length > 0
+                  child: cartState.cartitems.isNotEmpty
                       ? ListView.builder(
                           scrollDirection: Axis.vertical,
                           itemCount: cartState.cartitems.length,
@@ -321,15 +313,11 @@ class _CheckoutState extends State<Checkout> {
                                 categoriesSubModel: cartState.cartitems[i]);
                           },
                         )
-                      : Container(
-                          child: Center(
-                            child: Text("Your cart is currently empty"),
-                          ),
-                        )),
+                      : const EmptyCart()),
               Container(
                   //height: 150,
                   //color: Colors.red,
-                  padding: EdgeInsets.only(bottom: 10),
+                  padding: const EdgeInsets.only(bottom: 10),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -340,19 +328,21 @@ class _CheckoutState extends State<Checkout> {
                           Text(
                             "Sub Total:",
                             style:
-                                TextStyle(fontSize: 16, color: Utils.lightGray),
+                                TextStyle(fontSize: 14, color: Utils.lightGray),
                           ),
                           Text(
-                            "${"\u20A6" + Utils.moneyFormat(cartState.total.toInt().toString())}",
+                            "\u20A6" +
+                                Utils.moneyFormat(
+                                    cartState.total.toInt().toString()),
                             style: TextStyle(
                               color: Utils.lightGray,
-                              fontSize: 16,
+                              fontSize: 14,
                               //fontWeight: FontWeight.w800
                             ),
                           )
                         ],
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 4,
                       ),
                       Row(
@@ -361,10 +351,10 @@ class _CheckoutState extends State<Checkout> {
                           Text(
                             "Delivery Fee:",
                             style:
-                                TextStyle(fontSize: 16, color: Utils.lightGray),
+                                TextStyle(fontSize: 14, color: Utils.lightGray),
                           ),
                           Text(
-                            "${"\u20A6"}" + deliveryFee.toString(),
+                            "\u20A6" + deliveryFee.toString(),
                             style: TextStyle(
                               color: Utils.lightGray,
                               fontSize: 16,
@@ -373,10 +363,13 @@ class _CheckoutState extends State<Checkout> {
                           )
                         ],
                       ),
+                      const SizedBox(
+                        height: 4,
+                      ),
                       appState.lastPosition == null
                           ? Row(
                               mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
+                              children: const [
                                 Text(
                                   "No Delivery Address yet",
                                   style: TextStyle(
@@ -384,8 +377,27 @@ class _CheckoutState extends State<Checkout> {
                                 )
                               ],
                             )
-                          : SizedBox(),
-                      SizedBox(
+                          : Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  "Delivery Address:",
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                      fontSize: 14, color: Utils.lightGray),
+                                ),
+                                Text(
+                                  appState.location,
+                                  style: TextStyle(
+                                    color: Utils.lightGray,
+                                    fontSize: 16,
+                                    //fontWeight: FontWeight.w800
+                                  ),
+                                )
+                              ],
+                            ),
+                      const SizedBox(
                         height: 20,
                       ),
                       Row(
@@ -394,39 +406,48 @@ class _CheckoutState extends State<Checkout> {
                           Text(
                             "Total:",
                             style: TextStyle(
-                                fontSize: 18,
+                                fontSize: 14,
                                 color: Utils.darkGray,
                                 fontWeight: FontWeight.bold),
                           ),
                           Text(
-                            "${"\u20A6" + Utils.moneyFormat(total.toInt().toString())}",
+                            "\u20A6" +
+                                Utils.moneyFormat(total.toInt().toString()),
                             style: TextStyle(
                                 color: Utils.darkGray,
-                                fontSize: 18,
+                                fontSize: 14,
                                 fontWeight: FontWeight.bold
                                 //fontWeight: FontWeight.w800
                                 ),
                           )
                         ],
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 20,
                       ),
                       Material(
                           elevation: 5.0,
                           borderRadius: BorderRadius.circular(35.0),
-                          color: Utils.primaryColor, //Color(0xff01A0C7),
+                          color: Utils.primaryColor,
                           child: MaterialButton(
                               minWidth: MediaQuery.of(context).size.width,
-                              padding:
-                                  EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
+                              padding: const EdgeInsets.fromLTRB(
+                                  20.0, 15.0, 20.0, 15.0),
                               onPressed: () {
-                                // print("cartState.restaurantDetails.id" +
-                                //     cartState.restaurantDetails.id);
-                                chargeCard(cartState.total, deliveryFee,
-                                    context, cartState, appState);
+                                if (cartState.cartitems.isEmpty) {
+                                  Fluttertoast.showToast(
+                                      msg: "Your cart is currently empty.",
+                                      toastLength: Toast.LENGTH_SHORT,
+                                      gravity: ToastGravity.CENTER,
+                                      backgroundColor: Colors.black,
+                                      textColor: Colors.white,
+                                      timeInSecForIosWeb: 1);
+                                } else {
+                                  chargeCard(cartState.total, deliveryFee,
+                                      context, cartState, appState);
+                                }
                               },
-                              child: Text("Pay now",
+                              child: const Text("Pay now",
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
                                       color: Colors.white,
@@ -464,22 +485,25 @@ class _CategoryItemState extends State<CategoryItem> {
     return GestureDetector(
       onTap: () {},
       child: Container(
-        padding: EdgeInsets.symmetric(vertical: 10),
+        margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+        decoration: BoxDecoration(
+            color: Colors.white, borderRadius: BorderRadius.circular(10)),
         height: 140,
         width: double.infinity,
         child: Row(
           children: [
             ClipRRect(
-              borderRadius: BorderRadius.circular(0),
-              child: Container(
+              borderRadius: BorderRadius.circular(10),
+              child: SizedBox(
                 width: 85,
                 height: 200,
                 child: CachedNetworkImage(
                   fit: BoxFit.cover,
-                  imageUrl: categoriesSubModel.image_url,
-                  placeholder: (context, url) => Container(
+                  imageUrl: categoriesSubModel.imageUrl,
+                  placeholder: (context, url) => const SizedBox(
                       height: 120,
-                      child: Center(child: const CircularProgressIndicator())),
+                      child: Center(child: CircularProgressIndicator())),
                   errorWidget: (context, url, error) => Center(
                       child: Container(
                     color: Colors.white,
@@ -490,7 +514,7 @@ class _CategoryItemState extends State<CategoryItem> {
                 ),
               ),
             ),
-            SizedBox(
+            const SizedBox(
               width: 15,
             ),
             Expanded(
@@ -498,7 +522,7 @@ class _CategoryItemState extends State<CategoryItem> {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Container(
+                SizedBox(
                   height: 20,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -519,7 +543,7 @@ class _CategoryItemState extends State<CategoryItem> {
                         onPressed: () {
                           cartState.removeItem(categoriesSubModel);
                         },
-                        icon: Icon(Icons.clear),
+                        icon: const Icon(Icons.clear),
                       )
                     ],
                   ),
@@ -540,7 +564,7 @@ class _CategoryItemState extends State<CategoryItem> {
                   style:
                       GoogleFonts.roboto(fontSize: 16, color: Utils.lightGray),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 4,
                 ),
                 Row(
@@ -555,13 +579,13 @@ class _CategoryItemState extends State<CategoryItem> {
                         child: Container(
                           decoration: BoxDecoration(
                             border: Border.all(
-                                color: Color(0xFFffb74d), width: 2.0),
+                                color: const Color(0xFFffb74d), width: 2.0),
                             //color: Colors.orangeAccent,
                             shape: BoxShape.circle,
                           ),
                           height: 30.0,
                           width: 30.0,
-                          child: Center(
+                          child: const Center(
                               child: Text(
                             '-',
                             style: TextStyle(
@@ -572,13 +596,14 @@ class _CategoryItemState extends State<CategoryItem> {
                       ),
                     ),
                     Container(
-                        padding: EdgeInsets.only(left: 15, right: 15, top: 0),
+                        padding:
+                            const EdgeInsets.only(left: 15, right: 15, top: 0),
                         color: Colors.white,
                         child: Align(
                           alignment: Alignment.center,
                           child: Text("${categoriesSubModel.quantity}",
                               textAlign: TextAlign.center,
-                              style: TextStyle(
+                              style: const TextStyle(
                                   fontWeight: FontWeight.w700,
                                   fontSize: 16,
                                   fontFamily: "Roboto",
@@ -592,13 +617,13 @@ class _CategoryItemState extends State<CategoryItem> {
                         child: Container(
                           decoration: BoxDecoration(
                             border: Border.all(
-                                color: Color(0xFFffb74d), width: 2.0),
+                                color: const Color(0xFFffb74d), width: 2.0),
                             //color: Colors.orangeAccent,
                             shape: BoxShape.circle,
                           ),
                           height: 30.0,
                           width: 30.0,
-                          child: Center(
+                          child: const Center(
                               child: Text(
                             "+",
                             style: TextStyle(

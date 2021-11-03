@@ -1,5 +1,6 @@
-import 'dart:convert';
+
 import 'dart:convert' as convert;
+import 'dart:convert';
 
 import 'package:flutter_config/flutter_config.dart';
 import 'package:gritzafood/models/place.dart';
@@ -9,7 +10,7 @@ import 'package:http/http.dart';
 class PlaceApiProvider {
   PlaceApiProvider(this.sessionToken);
 
-  final sessionToken;
+  final dynamic sessionToken;
 
   final apiKey = FlutterConfig.get('GOOGLE_MAP_API_KEY');
 
@@ -20,12 +21,12 @@ class PlaceApiProvider {
     final url = Uri.parse(request);
     Response response = await get(url);
 
-    print("input" + input);
-    print("Lang: " + lang);
+    // print("input" + input);
+    // print("Lang: " + lang);
 
     if (response.statusCode == 200) {
       final result = json.decode(response.body);
-      print("result['status']" + result['status']);
+      //print("result['status']" + result['status']);
       if (result['status'] == 'OK') {
         // compose suggestions in a list
         return result['predictions']
@@ -38,7 +39,7 @@ class PlaceApiProvider {
       }
       throw Exception(result['error_message']);
     } else {
-      print("Api error");
+      //print("Api error");
       throw Exception('Failed to fetch suggestion');
     }
   }

@@ -13,7 +13,7 @@ final FirebaseAuth _auth = FirebaseAuth.instance;
 
 class ProfilePicsUpload extends StatefulWidget {
   final File image;
-  ProfilePicsUpload({
+  const ProfilePicsUpload({
     Key key,
     this.image,
   }) : super(key: key);
@@ -25,7 +25,7 @@ class ProfilePicsUpload extends StatefulWidget {
 class _ProfilePicsUploadState extends State<ProfilePicsUpload> {
   bool loading = false;
   Future<String> uploadFile() async {
-    final String uuid = Uuid().v1();
+    final String uuid = const Uuid().v1();
     if (widget.image == null) {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
         content: Text('No file was selected'),
@@ -35,7 +35,6 @@ class _ProfilePicsUploadState extends State<ProfilePicsUpload> {
 
     firebase_storage.UploadTask uploadTask;
 
-    // Create a Reference to the file
     firebase_storage.Reference ref = firebase_storage.FirebaseStorage.instance
         .ref()
         .child('profileImage')
@@ -44,7 +43,6 @@ class _ProfilePicsUploadState extends State<ProfilePicsUpload> {
     uploadTask = ref.putFile(widget.image);
 
     var imageUrl = await (await uploadTask).ref.getDownloadURL();
-    //print("imageUrl:" + imageUrl.toString());
     return imageUrl.toString();
   }
 
@@ -58,12 +56,11 @@ class _ProfilePicsUploadState extends State<ProfilePicsUpload> {
         textColor: Colors.white);
   }
 
-  upload() async {
+  void upload() async {
     setState(() {
       loading = true;
     });
     final User user = _auth.currentUser;
-    print("user : " + user.toString());
     SharedPreferences prefs = await SharedPreferences.getInstance();
     uploadFile().then((img) {
       FirebaseFirestore.instance
@@ -80,7 +77,6 @@ class _ProfilePicsUploadState extends State<ProfilePicsUpload> {
               })
           .catchError((err) => {
                 showCenterShortToast("An error just occured"),
-                print(err),
                 setState(() {
                   loading = false;
                 })
@@ -95,19 +91,19 @@ class _ProfilePicsUploadState extends State<ProfilePicsUpload> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Utils.primaryColor,
-        title: Text(
+        title: const Text(
           "Profile Picture Upload",
         ),
       ),
-      body: Container(
+      body: SizedBox(
         width: width,
         height: height,
         child: SingleChildScrollView(
           child: Column(
             children: [
               Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 30),
-                  child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
+                  child: SizedBox(
                       height: 200,
                       width: 200,
                       child: Image.file(widget.image, fit: BoxFit.cover))),
@@ -125,8 +121,8 @@ class _ProfilePicsUploadState extends State<ProfilePicsUpload> {
                     ),
                     alignment: Alignment.center,
                     child: loading
-                        ? CircularProgressIndicator()
-                        : Text(
+                        ? const CircularProgressIndicator()
+                        : const Text(
                             "Upload",
                             style: TextStyle(
                                 fontSize: 18,

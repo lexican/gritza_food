@@ -23,12 +23,6 @@ class Order {
       this.deliveryFee,
       this.total,
       this.restaurantId});
-
-  // @override
-  // String toString() {
-  //   return 'Place(streetNumber: $streetNumber, street: $street, city: $city, zipCode: $zipCode)';
-  // }
-
   factory Order.fromSnapshot(DocumentSnapshot doc) {
     Map getDocs = doc.data();
     return Order(

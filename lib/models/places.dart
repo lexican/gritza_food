@@ -7,6 +7,4 @@ class Places {
   factory Places.fromJson(Map<String, dynamic> json) {
     return Places(description: json['description'], placeId: json['place_id']);
   }
-
-  // factory Places.toJson() {}
 }

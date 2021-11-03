@@ -30,7 +30,6 @@ class MapStates with ChangeNotifier, DiagnosticableTreeMixin {
   }
 
   void _getUserLocation() async {
-    print("GET USER METHOD RUNNING =========");
     Position position = await Geolocator()
         .getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
     List<Placemark> placemark = await Geolocator()
@@ -39,17 +38,16 @@ class MapStates with ChangeNotifier, DiagnosticableTreeMixin {
     _lastPosition = LatLng(position.latitude, position.longitude);
     calDistance();
 
-    print(
-        "the latitude is: ${position.longitude} and the longitude is: ${position.longitude} ");
-    print("initial position is : ${_initialPosition.toString()}");
+    // print(
+    //     "the latitude is: ${position.longitude} and the longitude is: ${position.longitude} ");
+    // print("initial position is : ${_initialPosition.toString()}");
     locationController.text = placemark[0].name;
     _loading = false;
     //_loading = true;
     _location = placemark[0].name;
 
-    double distance = await Geolocator().distanceBetween(6.4849781697593,
-        3.352957023370103, 6.455028550938457, 3.3508100811908927);
-    print("_distance: " + distance.toString());
+    //double distance = await Geolocator().distanceBetween(6.4849781697593,3.352957023370103, 6.455028550938457, 3.3508100811908927);
+    //print("_distance: " + distance.toString());
 
     notifyListeners();
   }
@@ -77,8 +75,8 @@ class MapStates with ChangeNotifier, DiagnosticableTreeMixin {
     _lastPosition = LatLng(lat, lng);
     calDistance();
 
-    print("the latitude is: $lat and the longitude is: $lng ");
-    print("initial position is : ${_initialPosition.toString()}");
+    // print("the latitude is: $lat and the longitude is: $lng ");
+    // print("initial position is : ${_initialPosition.toString()}");
     locationController.text = placemark[0].name;
     _loading = false;
     //_loading = true;
@@ -86,7 +84,7 @@ class MapStates with ChangeNotifier, DiagnosticableTreeMixin {
   }
 
   void _loadingInitialPosition() async {
-    await Future.delayed(Duration(seconds: 5)).then((v) {
+    await Future.delayed(const Duration(seconds: 5)).then((v) {
       if (_initialPosition == null) {
         locationServiceActive = false;
         notifyListeners();
@@ -105,7 +103,6 @@ class MapStates with ChangeNotifier, DiagnosticableTreeMixin {
   }
 
   void goToPlace(Place place) async {
-    print("Place:" + place.name);
     locationController.text = place.name;
     _location = place.name;
     _mapController.animateCamera(

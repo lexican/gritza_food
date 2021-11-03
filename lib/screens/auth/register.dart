@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:gritzafood/Utils/Utils.dart';
+import 'package:gritzafood/utils/utils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'Home.dart';
@@ -10,8 +10,7 @@ import 'Home.dart';
 final DateTime timestamp = DateTime.now();
 
 class Register extends StatefulWidget {
-  Register({Key key}) : super(key: key);
-  //final String title;
+  const Register({Key key}) : super(key: key);
   @override
   _RegisterState createState() => _RegisterState();
 }
@@ -28,8 +27,8 @@ class _RegisterState extends State<Register> {
 
   bool isLoading = false;
   bool isLoggedIn = false;
-  final _formKey = new GlobalKey<FormState>();
-  TextStyle style = TextStyle(fontFamily: 'Montserrat', fontSize: 20.0);
+  final _formKey = GlobalKey<FormState>();
+  TextStyle style = const TextStyle(fontFamily: 'Montserrat', fontSize: 20.0);
 
   bool validateAndSave() {
     final form = _formKey.currentState;
@@ -59,7 +58,6 @@ class _RegisterState extends State<Register> {
                   if (querySnapshot.size > 0)
                     {
                       err = "Username already exist.",
-                      print("Username is taken"),
                       showCenterShortToast("Username already exist"),
                     }
                   else
@@ -83,24 +81,21 @@ class _RegisterState extends State<Register> {
                                   Navigator.pushAndRemoveUntil(
                                       context,
                                       MaterialPageRoute(
-                                          builder: (context) => Home()),
+                                          builder: (context) => const Home()),
                                       (_) => false),
                                   form.reset()
                                 })
                             .catchError((err) => {
                                   showCenterShortToast("Email already exist"),
-                                  print(err)
                                 }))
                         .catchError((err) => {
                               showCenterShortToast("Email already exist"),
-                              print(err)
                             })
                 });
       } else {
         showCenterShortToast("Password must match");
       }
     } else {
-      print("Invalid form");
     }
     setState(() {
       isLoading = false;
@@ -119,18 +114,15 @@ class _RegisterState extends State<Register> {
 
   Widget showCircularProgress() {
     if (isLoading == true) {
-      return Center(child: CircularProgressIndicator());
+      return const Center(child: CircularProgressIndicator());
     }
-    return Container(
-      height: 0.0,
-      width: 0.0,
-    );
+    return const SizedBox();
   }
 
   String emailValidator(String value) {
     Pattern pattern =
         r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
-    RegExp regex = new RegExp(pattern);
+    RegExp regex = RegExp(pattern);
     if (!regex.hasMatch(value)) {
       return 'Email format is invalid';
     } else {
@@ -148,42 +140,54 @@ class _RegisterState extends State<Register> {
 
   @override
   Widget build(BuildContext context) {
-    final title = Container(
-      width: double.infinity,
-      padding: EdgeInsets.symmetric(vertical: 30),
-      child: Center(
-        child: Text("Sign Up",
+    final title = Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const SizedBox(
+          height: 30,
+        ),
+        Text("Create Account",
             style: TextStyle(
+                color: Utils.primaryColor,
                 fontSize: 32,
                 fontFamily: "Roboto",
                 fontWeight: FontWeight.bold)),
-      ),
+        const SizedBox(
+          height: 10,
+        ),
+        Text("Let’s get you started, this will only take a few seconds.",
+            style: TextStyle(
+                fontSize: 15,
+                fontFamily: "Roboto",
+                fontWeight: FontWeight.normal,
+                color: Utils.lightGray))
+      ],
     );
-
     final firstNameField = TextFormField(
       maxLines: 1,
       keyboardType: TextInputType.text,
       autofocus: false,
-      decoration: new InputDecoration(
+      decoration: InputDecoration(
           hintText: 'First Name',
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(35.0),
-            borderSide: BorderSide(
+            borderSide: const BorderSide(
               color: Colors.blue,
             ),
           ),
           errorBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.red, width: 1.0),
+            borderSide: const BorderSide(color: Colors.red, width: 1.0),
             borderRadius: BorderRadius.circular(35.0),
           ),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(35.0),
             borderSide: BorderSide(
-              color: Utils.primaryColor,
+              color: Utils.lightGray,
               width: 1.0,
             ),
           ),
-          contentPadding: EdgeInsets.symmetric(horizontal: 20)),
+          contentPadding: const EdgeInsets.symmetric(horizontal: 20)),
       validator: (value) => value.isEmpty ? 'First Name can\'t be empty' : null,
       onSaved: (value) => _firstName = value.trim(),
     );
@@ -192,26 +196,26 @@ class _RegisterState extends State<Register> {
       maxLines: 1,
       keyboardType: TextInputType.text,
       autofocus: false,
-      decoration: new InputDecoration(
+      decoration: InputDecoration(
           hintText: 'Last Name',
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(35.0),
-            borderSide: BorderSide(
+            borderSide: const BorderSide(
               color: Colors.blue,
             ),
           ),
           errorBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.red, width: 1.0),
+            borderSide: const BorderSide(color: Colors.red, width: 1.0),
             borderRadius: BorderRadius.circular(35.0),
           ),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(35.0),
             borderSide: BorderSide(
-              color: Utils.primaryColor,
+              color: Utils.lightGray,
               width: 1.0,
             ),
           ),
-          contentPadding: EdgeInsets.symmetric(horizontal: 20)),
+          contentPadding: const EdgeInsets.symmetric(horizontal: 20)),
       validator: (value) => value.isEmpty ? 'First Name can\'t be empty' : null,
       onSaved: (value) => _lastName = value.trim(),
     );
@@ -220,26 +224,26 @@ class _RegisterState extends State<Register> {
       maxLines: 1,
       keyboardType: TextInputType.text,
       autofocus: false,
-      decoration: new InputDecoration(
+      decoration: InputDecoration(
           hintText: 'Username',
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(35.0),
-            borderSide: BorderSide(
+            borderSide: const BorderSide(
               color: Colors.blue,
             ),
           ),
           errorBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.red, width: 1.0),
+            borderSide: const BorderSide(color: Colors.red, width: 1.0),
             borderRadius: BorderRadius.circular(35.0),
           ),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(35.0),
             borderSide: BorderSide(
-              color: Utils.primaryColor,
+              color: Utils.lightGray,
               width: 1.0,
             ),
           ),
-          contentPadding: EdgeInsets.symmetric(horizontal: 20)),
+          contentPadding: const EdgeInsets.symmetric(horizontal: 20)),
       validator: (value) => value.isEmpty ? 'Username can\'t be empty' : null,
       onSaved: (value) => _username = value.trim(),
     );
@@ -248,26 +252,26 @@ class _RegisterState extends State<Register> {
       maxLines: 1,
       keyboardType: TextInputType.emailAddress,
       autofocus: false,
-      decoration: new InputDecoration(
+      decoration: InputDecoration(
           hintText: 'Email',
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(35.0),
-            borderSide: BorderSide(
+            borderSide: const BorderSide(
               color: Colors.blue,
             ),
           ),
           border: OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.red, width: 1.0),
+            borderSide: const BorderSide(color: Colors.red, width: 1.0),
             borderRadius: BorderRadius.circular(35.0),
           ),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(35.0),
             borderSide: BorderSide(
-              color: Utils.primaryColor,
+              color: Utils.lightGray,
               width: 1.0,
             ),
           ),
-          contentPadding: EdgeInsets.symmetric(horizontal: 20)),
+          contentPadding: const EdgeInsets.symmetric(horizontal: 20)),
       validator: emailValidator,
       onSaved: (value) => _email = value.trim(),
     );
@@ -276,26 +280,26 @@ class _RegisterState extends State<Register> {
       maxLines: 1,
       obscureText: true,
       autofocus: false,
-      decoration: new InputDecoration(
+      decoration: InputDecoration(
           hintText: 'Password',
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(35.0),
-            borderSide: BorderSide(
+            borderSide: const BorderSide(
               color: Colors.blue,
             ),
           ),
           errorBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.red, width: 1.0),
+            borderSide: const BorderSide(color: Colors.red, width: 1.0),
             borderRadius: BorderRadius.circular(35.0),
           ),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(35.0),
             borderSide: BorderSide(
-              color: Utils.primaryColor,
+              color: Utils.lightGray,
               width: 1.0,
             ),
           ),
-          contentPadding: EdgeInsets.symmetric(horizontal: 20)),
+          contentPadding: const EdgeInsets.symmetric(horizontal: 20)),
       validator: pwdValidator,
       onSaved: (value) => _password = value.trim(),
     );
@@ -304,23 +308,23 @@ class _RegisterState extends State<Register> {
       maxLines: 1,
       obscureText: true,
       autofocus: false,
-      decoration: new InputDecoration(
+      decoration: InputDecoration(
           hintText: 'Confirm Password',
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(35.0),
-            borderSide: BorderSide(
+            borderSide: const BorderSide(
               color: Colors.blue,
             ),
           ),
           errorBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.red, width: 1.0),
+            borderSide: const BorderSide(color: Colors.red, width: 1.0),
             borderRadius: BorderRadius.circular(35.0),
           ),
           border: OutlineInputBorder(
-            borderSide: BorderSide(color: Utils.primaryColor, width: 1.0),
+            borderSide: BorderSide(color: Utils.lightGray, width: 1.0),
             borderRadius: BorderRadius.circular(35.0),
           ),
-          contentPadding: EdgeInsets.symmetric(horizontal: 20)),
+          contentPadding: const EdgeInsets.symmetric(horizontal: 20)),
       validator: pwdValidator,
       onSaved: (value) => _confirmPassword = value.trim(),
     );
@@ -331,7 +335,7 @@ class _RegisterState extends State<Register> {
       color: Utils.primaryColor, //Color(0xff01A0C7),
       child: MaterialButton(
         minWidth: MediaQuery.of(context).size.width,
-        padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
+        padding: const EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
         onPressed: validateAndSubmit,
         child: isLoading
             ? showCircularProgress()
@@ -343,52 +347,53 @@ class _RegisterState extends State<Register> {
     );
 
     return Scaffold(
+        backgroundColor: Utils.backgroundColor,
         body: Container(
             alignment: Alignment.center,
-            padding: EdgeInsets.all(15),
+            padding: const EdgeInsets.all(15),
             child: Form(
               key: _formKey,
               child: ListView(
                 shrinkWrap: true,
                 children: <Widget>[
                   title,
-                  SizedBox(
-                    height: 0,
+                  const SizedBox(
+                    height: 35,
                   ),
                   emailField,
-                  SizedBox(
+                  const SizedBox(
                     height: 15,
                   ),
                   usernameField,
-                  SizedBox(
+                  const SizedBox(
                     height: 15,
                   ),
                   firstNameField,
-                  SizedBox(
+                  const SizedBox(
                     height: 15,
                   ),
                   lastNameField,
-                  SizedBox(
+                  const SizedBox(
                     height: 15,
                   ),
                   passwordField,
-                  SizedBox(
+                  const SizedBox(
                     height: 15,
                   ),
                   confirmPasswordField,
-                  SizedBox(
+                  const SizedBox(
                     height: 20,
                   ),
                   registerButton,
                   //showCircularProgress(),
-                  SizedBox(
+                  const SizedBox(
                     height: 25,
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Text("Already have an account?",
+                      const Text("Already have an account?",
                           style: TextStyle(
                             fontFamily: 'Roboto',
                             fontWeight: FontWeight.w500,

@@ -5,6 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:gritzafood/Utils/Utils.dart';
 import 'package:gritzafood/screens/profile/profile_picture_upload.dart';
@@ -20,7 +21,7 @@ final TextEditingController firstNameController = TextEditingController();
 final TextEditingController lastNameController = TextEditingController();
 
 class Profile extends StatefulWidget {
-  Profile({Key key}) : super(key: key);
+  const Profile({Key key}) : super(key: key);
 
   @override
   _ProfileState createState() => _ProfileState();
@@ -31,8 +32,8 @@ class _ProfileState extends State<Profile> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final _formKey = GlobalKey<FormState>();
 
-  final TextStyle labelStyle =
-      TextStyle(color: Colors.black87, fontSize: 16, fontFamily: 'SegoeUi');
+  final TextStyle labelStyle = const TextStyle(
+      color: Colors.black87, fontSize: 16, fontFamily: 'SegoeUi');
 
   var displayName = "";
   var photoUrl = "";
@@ -47,13 +48,11 @@ class _ProfileState extends State<Profile> {
   @override
   void initState() {
     super.initState();
-    print("Called");
     loadUser();
   }
 
-  loadUser() async {
+  void loadUser() async {
     final User user = _auth.currentUser;
-    print("user : " + user.toString());
 
     DocumentSnapshot doc = await usersRef.doc(user.uid).get();
 
@@ -72,7 +71,6 @@ class _ProfileState extends State<Profile> {
                   .substring(0, 1)
                   .toUpperCase() +
               getDocs['displayName'].split(' ')[1].substring(1);
-          //photoUrl = doc.data()['photoUrl'];
           firstname = getDocs['displayName'].split(' ')[1];
           lastname = getDocs['displayName'].split(' ')[0];
           username = getDocs['username'];
@@ -89,7 +87,7 @@ class _ProfileState extends State<Profile> {
     }
   }
 
-  logout() async {
+  void logout() async {
     await googleSignIn.signOut();
     await _auth.signOut();
 
@@ -104,9 +102,9 @@ class _ProfileState extends State<Profile> {
 
     Navigator.pushAndRemoveUntil(
         context,
-        MaterialPageRoute(builder: (BuildContext context) => SplashScreen()),
+        MaterialPageRoute(
+            builder: (BuildContext context) => const SplashScreen()),
         (Route<dynamic> route) => false);
-    print("User signed out of Google account");
   }
 
   bool validateAndSave() {
@@ -158,7 +156,6 @@ class _ProfileState extends State<Profile> {
                 setState(() {
                   isLoading = false;
                 }),
-                print(err)
               });
       setState(() {
         isLoading = false;
@@ -168,12 +165,9 @@ class _ProfileState extends State<Profile> {
 
   Widget showCircularProgress() {
     if (isLoading == true) {
-      return Center(child: CircularProgressIndicator());
+      return const Center(child: CircularProgressIndicator());
     }
-    return Container(
-      height: 0.0,
-      width: 0.0,
-    );
+    return const SizedBox();
   }
 
   Future getImage() async {
@@ -192,14 +186,14 @@ class _ProfileState extends State<Profile> {
             setState(() {
               loadUser();
             });
-            print("Value ${value.url.toString()}");
-            print('Do something after getting result');
+            // print("Value ${value.url.toString()}");
+            // print('Do something after getting result');
           } else {
-            print('Do nothing');
+            //print('Do nothing');
           }
         });
       } else {
-        print('No image selected.');
+        //print('No image selected.');
       }
     });
   }
@@ -217,10 +211,10 @@ class _ProfileState extends State<Profile> {
           enabled: false,
           labelText: 'Username',
           labelStyle: labelStyle,
-          focusedBorder: UnderlineInputBorder(
+          focusedBorder: const UnderlineInputBorder(
             borderSide: BorderSide(color: Colors.purple),
           ),
-          enabledBorder: new UnderlineInputBorder(
+          enabledBorder: const UnderlineInputBorder(
               borderSide: BorderSide(color: Colors.grey, width: 1.0)),
         ),
         onChanged: (String val) {
@@ -228,7 +222,7 @@ class _ProfileState extends State<Profile> {
         },
         keyboardType: TextInputType.text,
         controller: usernameController,
-        style: TextStyle(
+        style: const TextStyle(
             color: Colors.black87, fontSize: 14, fontFamily: 'Roboto'),
       ),
     );
@@ -242,7 +236,7 @@ class _ProfileState extends State<Profile> {
           focusedBorder: UnderlineInputBorder(
             borderSide: BorderSide(color: Utils.primaryColor),
           ),
-          enabledBorder: new UnderlineInputBorder(
+          enabledBorder: const UnderlineInputBorder(
               borderSide: BorderSide(color: Colors.grey, width: 1.0)),
         ),
         onChanged: (String val) {
@@ -250,7 +244,7 @@ class _ProfileState extends State<Profile> {
         },
         keyboardType: TextInputType.text,
         controller: emailController,
-        style: TextStyle(
+        style: const TextStyle(
             color: Colors.black87, fontSize: 14, fontFamily: 'Roboto'),
       ),
     );
@@ -260,10 +254,10 @@ class _ProfileState extends State<Profile> {
         decoration: InputDecoration(
           labelText: 'Firstname',
           labelStyle: labelStyle,
-          focusedBorder: UnderlineInputBorder(
+          focusedBorder: const UnderlineInputBorder(
             borderSide: BorderSide(color: Colors.purple),
           ),
-          enabledBorder: new UnderlineInputBorder(
+          enabledBorder: const UnderlineInputBorder(
               borderSide: BorderSide(color: Colors.grey, width: 1.0)),
         ),
         onChanged: (String val) {
@@ -273,7 +267,7 @@ class _ProfileState extends State<Profile> {
             value.isEmpty ? 'First Name can\'t be empty' : null,
         keyboardType: TextInputType.text,
         controller: firstNameController,
-        style: TextStyle(
+        style: const TextStyle(
             color: Colors.black87, fontSize: 14, fontFamily: 'Roboto'),
       ),
     );
@@ -283,10 +277,10 @@ class _ProfileState extends State<Profile> {
         decoration: InputDecoration(
           labelText: 'Lastname',
           labelStyle: labelStyle,
-          focusedBorder: UnderlineInputBorder(
+          focusedBorder: const UnderlineInputBorder(
             borderSide: BorderSide(color: Colors.purple),
           ),
-          enabledBorder: new UnderlineInputBorder(
+          enabledBorder: const UnderlineInputBorder(
               borderSide: BorderSide(color: Colors.grey, width: 1.0)),
         ),
         onChanged: (String val) {
@@ -296,12 +290,12 @@ class _ProfileState extends State<Profile> {
             value.isEmpty ? 'Last Name can\'t be empty' : null,
         keyboardType: TextInputType.text,
         controller: lastNameController,
-        style: TextStyle(
+        style: const TextStyle(
             color: Colors.black87, fontSize: 14, fontFamily: 'Roboto'),
       ),
     );
 
-    items.add(SizedBox(
+    items.add(const SizedBox(
       height: 20,
     ));
 
@@ -311,19 +305,45 @@ class _ProfileState extends State<Profile> {
       color: Utils.primaryColor, //Color(0xff01A0C7),
       child: MaterialButton(
         minWidth: MediaQuery.of(context).size.width,
-        padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
+        padding: const EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
         onPressed: validateAndSubmit,
         child: isLoading
             ? showCircularProgress()
-            : Text("Update",
+            : const Text("Update",
                 textAlign: TextAlign.center,
                 style: TextStyle(
                     color: Colors.white, fontWeight: FontWeight.bold)),
       ),
     ));
 
+    void _select(Choice choice) {
+      if (choice.title == "Logout") {
+        logout();
+      }
+    }
+
     return Scaffold(
-      body: Container(
+      backgroundColor: Utils.backgroundColor,
+      appBar: AppBar(
+        backgroundColor: Utils.primaryColor,
+        title: Text(
+          "Profile",
+          style: GoogleFonts.roboto(
+              fontSize: 18, color: Colors.white, fontWeight: FontWeight.bold),
+        ),
+        actions: [
+          PopupMenuButton<Choice>(
+            onSelected: _select,
+            itemBuilder: (BuildContext context) {
+              return choices.map((Choice choice) {
+                return PopupMenuItem<Choice>(
+                    value: choice, child: Text(choice.title));
+              }).toList();
+            },
+          ),
+        ],
+      ),
+      body: SizedBox(
         width: width,
         height: height,
         child: SingleChildScrollView(
@@ -332,10 +352,10 @@ class _ProfileState extends State<Profile> {
           child: Container(
               width: width,
               height: height,
-              padding: EdgeInsets.symmetric(horizontal: 20),
+              padding: const EdgeInsets.symmetric(horizontal: 20),
               child: Column(
                 children: [
-                  SizedBox(
+                  const SizedBox(
                     height: 40,
                   ),
                   Container(
@@ -356,20 +376,20 @@ class _ProfileState extends State<Profile> {
                                       width: 100,
                                       fit: BoxFit.cover,
                                       imageUrl: photoUrl,
-                                      placeholder: (context, url) => Container(
+                                      placeholder: (context, url) => SizedBox(
                                           height: 100,
                                           width: 100,
                                           child: Center(child: Container())),
                                       errorWidget: (context, url, error) =>
-                                          Center(
-                                              child: const Icon(Icons.error)),
+                                          const Center(
+                                              child: Icon(Icons.error)),
                                       fadeOutDuration:
                                           const Duration(seconds: 1),
                                       fadeInDuration:
                                           const Duration(seconds: 3),
                                     ),
                                   )
-                                : Container(
+                                : const SizedBox(
                                     height: 100,
                                     width: 100,
                                     child: Image(
@@ -381,12 +401,12 @@ class _ProfileState extends State<Profile> {
                               onTap: () {
                                 getImage();
                               },
-                              child: Icon(Icons.camera_alt_rounded)),
+                              child: const Icon(Icons.camera_alt_rounded)),
                         )
                       ],
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 20,
                   ),
                   ...items,
@@ -397,3 +417,14 @@ class _ProfileState extends State<Profile> {
     );
   }
 }
+
+class Choice {
+  const Choice({this.title, this.icon});
+
+  final String title;
+  final IconData icon;
+}
+
+const List<Choice> choices = <Choice>[
+  Choice(title: 'Logout', icon: Icons.admin_panel_settings),
+];

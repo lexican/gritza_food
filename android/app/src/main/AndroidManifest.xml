@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.gritzafood">
    <application
-        android:label="gritzafood"
+        android:label="Gritza Food"
         android:icon="@mipmap/launcher_icon">
         <meta-data android:name="com.google.android.geo.API_KEY"
         android:value="AIzaSyD3CuXvo8PvCSWo89j9SdVEkvvEnkShJZQ"/>

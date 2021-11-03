@@ -2,21 +2,19 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+// ignore: library_prefixes
 import 'package:gritzafood/models/User.dart' as modelUser;
 import 'package:gritzafood/screens/auth/register.dart';
 import 'package:gritzafood/screens/auth/reset.dart';
-import 'package:gritzafood/screens/cart/cart.dart';
 import 'package:gritzafood/screens/home_page.dart';
 import 'package:gritzafood/screens/order/order_page.dart';
 import 'package:gritzafood/screens/profile/profile.dart';
 import 'package:gritzafood/screens/search/search.dart';
-import 'package:gritzafood/states/map_states.dart';
 import 'package:gritzafood/utils/utils.dart';
-import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
-import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 final GoogleSignIn googleSignIn = GoogleSignIn();
@@ -27,7 +25,7 @@ final DateTime timestamp = DateTime.now();
 modelUser.User currentUser;
 
 class Home extends StatefulWidget {
-  Home({Key key}) : super(key: key);
+  const Home({Key key}) : super(key: key);
 
   @override
   _HomeState createState() => _HomeState();
@@ -43,9 +41,9 @@ class _HomeState extends State<Home> {
 
   final databaseReference = FirebaseFirestore.instance;
 
-  final _formKey = new GlobalKey<FormState>();
+  final _formKey = GlobalKey<FormState>();
 
-  TextStyle style = TextStyle(fontFamily: 'Montserrat', fontSize: 20.0);
+  TextStyle style = const TextStyle(fontFamily: 'Montserrat', fontSize: 20.0);
 
   @override
   void initState() {
@@ -53,21 +51,11 @@ class _HomeState extends State<Home> {
     getUser();
   }
 
-  void _select(Choice choice) {
-    if (choice.title == "Logout") {
-      logout();
-    }
-  }
-
   Future getUser() async {
-    // Initialize Firebase
-
     SharedPreferences prefs = await SharedPreferences.getInstance();
     bool authSignedIn = prefs.getBool('auth') ?? false;
 
     final User user = _auth.currentUser;
-
-    print("authSignedIn: " + authSignedIn.toString());
 
     if (authSignedIn == true) {
       if (user != null) {
@@ -93,158 +81,52 @@ class _HomeState extends State<Home> {
 
   int _selectedIndex = 0;
 
-  static List<Widget> _widgetOptions = <Widget>[
-    HomePage(),
-    Search(),
-    OrderPage(),
-    Profile()
+  static final List<Widget> _widgetOptions = <Widget>[
+    const HomePage(),
+    const Search(),
+    const OrderPage(),
+    const Profile()
   ];
 
-  onTap(int pageIndex) {
+  void onTap(int pageIndex) {
     setState(() {
       _selectedIndex = pageIndex;
     });
   }
 
-  AppBar getAppBar(appState) {
-    switch (_selectedIndex) {
-      case 0:
-        {
-          return AppBar(
-            backgroundColor: Utils.primaryColor,
-            title: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  "Delivery to",
-                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.w300),
-                ),
-                Text(appState.location, style: TextStyle(fontSize: 18))
-              ],
-            ),
-            actions: [
-              GestureDetector(
-                onTap: () {
-                  showMaterialModalBottomSheet(
-                    expand: false,
-                    context: context,
-                    backgroundColor: Colors.transparent,
-                    builder: (context) => CartModal(),
-                  );
-                },
-                child: Container(
-                  padding: EdgeInsets.only(right: 10),
-                  child: Icon(Icons.shopping_cart_outlined),
-                ),
-              )
-            ],
-            //body:
-          );
-        }
-        break;
-
-      case 1:
-        {
-          return AppBar(
-            backgroundColor: Utils.primaryColor,
-            title: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  "Delivery to",
-                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.w300),
-                ),
-                Text(appState.location, style: TextStyle(fontSize: 18))
-              ],
-            ),
-            actions: [
-              GestureDetector(
-                onTap: () {
-                  showMaterialModalBottomSheet(
-                    expand: false,
-                    context: context,
-                    backgroundColor: Colors.transparent,
-                    builder: (context) => CartModal(),
-                  );
-                },
-                child: Container(
-                  padding: EdgeInsets.only(right: 10),
-                  child: Icon(Icons.shopping_cart_outlined),
-                ),
-              )
-            ],
-            //body:
-          );
-        }
-        break;
-
-      case 2:
-        {
-          return null;
-        }
-
-      case 3:
-        {
-          return AppBar(
-            backgroundColor: Utils.primaryColor,
-            title: Text(
-              "Profile",
-              style: GoogleFonts.roboto(
-                  fontSize: 18,
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold),
-            ),
-            actions: [
-              PopupMenuButton<Choice>(
-                onSelected: _select,
-                itemBuilder: (BuildContext context) {
-                  return choices.map((Choice choice) {
-                    return PopupMenuItem<Choice>(
-                        value: choice, child: Text(choice.title));
-                  }).toList();
-                },
-              ),
-            ],
-          );
-        }
-        break;
-
-      default:
-        {
-          return null;
-        }
-        break;
-    }
-  }
-
   Scaffold buildAuthScreen() {
-    final appState = Provider.of<MapStates>(context);
-
     return Scaffold(
-      appBar: getAppBar(appState),
+      backgroundColor: Utils.backgroundColor,
       body: _widgetOptions.elementAt(_selectedIndex),
       bottomNavigationBar: CupertinoTabBar(
           currentIndex: _selectedIndex,
           onTap: onTap,
           activeColor: Utils.primaryColor,
           items: [
-            BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
             BottomNavigationBarItem(
-              label: "Search",
-              icon: Icon(
-                Icons.search,
-                //size: 35.0,
+                icon: SvgPicture.asset(
+              "assets/icon/home.svg",
+              color: _selectedIndex == 0 ? Utils.primaryColor : Colors.grey,
+            )),
+            BottomNavigationBarItem(
+              icon: SvgPicture.asset(
+                "assets/icon/search.svg",
+                color: _selectedIndex == 1 ? Utils.primaryColor : Colors.grey,
+                height: 26,
+                width: 26,
               ),
             ),
             BottomNavigationBarItem(
-              label: "Orders",
-              icon: Icon(Icons.shopping_cart),
+              icon: SvgPicture.asset(
+                "assets/icon/order.svg",
+                color: _selectedIndex == 2 ? Utils.primaryColor : Colors.grey,
+              ),
             ),
             BottomNavigationBarItem(
-              label: "Profile",
-              icon: Icon(Icons.account_circle),
+              icon: SvgPicture.asset(
+                "assets/icon/profile.svg",
+                color: _selectedIndex == 3 ? Utils.primaryColor : Colors.grey,
+              ),
             ),
           ]),
     );
@@ -262,7 +144,7 @@ class _HomeState extends State<Home> {
             .signInWithEmailAndPassword(email: _email, password: _password);
 
         if (userCredential.user != null) {
-          print("New Sign in: " + userCredential.user.uid);
+          //print("New Sign in: " + userCredential.user.uid);
           DocumentSnapshot doc =
               await usersRef.doc(userCredential.user.uid).get();
           currentUser = modelUser.User.fromSnapshot(doc);
@@ -282,10 +164,10 @@ class _HomeState extends State<Home> {
         }
       } on FirebaseAuthException catch (e) {
         if (e.code == 'user-not-found') {
-          print('No user found for that email.');
+          //print('No user found for that email.');
           showCenterShortToast("User does not exist.");
         } else if (e.code == 'wrong-password') {
-          print('Wrong password provided for that user.');
+          //print('Wrong password provided for that user.');
           showCenterShortToast("Invalid username or password");
         }
       }
@@ -295,7 +177,7 @@ class _HomeState extends State<Home> {
     });
   }
 
-  login() async {
+  void login() async {
     final GoogleSignInAccount googleSignInAccount = await googleSignIn.signIn();
     final GoogleSignInAuthentication googleSignInAuthentication =
         await googleSignInAccount.authentication;
@@ -355,22 +237,19 @@ class _HomeState extends State<Home> {
     final form = _formKey.currentState;
     form.save();
     if (form.validate()) {
-      print("Valid form");
+      //print("Valid form");
       return true;
     } else {
-      print("Invalid form");
+      // print("Invalid form");
       return false;
     }
   }
 
   Widget showCircularProgress() {
     if (isLoading == true) {
-      return Center(child: CircularProgressIndicator());
+      return const Center(child: CircularProgressIndicator());
     }
-    return Container(
-      height: 0.0,
-      width: 0.0,
-    );
+    return const SizedBox();
   }
 
   void showCenterShortToast(String message) {
@@ -383,7 +262,7 @@ class _HomeState extends State<Home> {
         timeInSecForIosWeb: 1);
   }
 
-  logout() async {
+  void logout() async {
     await googleSignIn.signOut();
     await _auth.signOut();
 
@@ -396,10 +275,8 @@ class _HomeState extends State<Home> {
     prefs.remove('id');
     prefs.remove('username');
 
-    print("User signed out of Google account");
-
-    Navigator.pushAndRemoveUntil(
-        context, MaterialPageRoute(builder: (context) => Home()), (_) => false);
+    Navigator.pushAndRemoveUntil(context,
+        MaterialPageRoute(builder: (context) => const Home()), (_) => false);
   }
 
   Widget _signInButton() {
@@ -417,18 +294,18 @@ class _HomeState extends State<Home> {
           color: Colors.transparent,
           borderRadius: BorderRadius.circular(35.0),
         ),
-        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 20),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Image(image: AssetImage("assets/images/google.jpg"), height: 35.0),
+          children: const <Widget>[
+            Image(image: AssetImage("assets/images/google.jpg"), height: 30.0),
             Padding(
-              padding: const EdgeInsets.only(left: 10),
+              padding: EdgeInsets.only(left: 10),
               child: Text(
                 'Sign in with Google',
                 style: TextStyle(
-                  fontSize: 20,
+                  fontSize: 14,
                   color: Colors.grey,
                 ),
               ),
@@ -440,42 +317,53 @@ class _HomeState extends State<Home> {
   }
 
   Scaffold buildUnAuthScreen() {
-    final title = Row(
-      mainAxisAlignment: MainAxisAlignment.center,
+    final title = Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Container(
-          padding: EdgeInsets.symmetric(vertical: 30),
-          child: Text("Sign In",
-              style: TextStyle(
-                  fontSize: 32,
-                  fontFamily: "Roboto",
-                  fontWeight: FontWeight.bold)),
-        )
+        const SizedBox(
+          height: 30,
+        ),
+        Text("Sign In",
+            style: TextStyle(
+                color: Utils.primaryColor,
+                fontSize: 32,
+                fontFamily: "Roboto",
+                fontWeight: FontWeight.bold)),
+        const SizedBox(
+          height: 10,
+        ),
+        Text("Let’s get you started, this will only take a few seconds.",
+            style: TextStyle(
+                fontSize: 15,
+                fontFamily: "Roboto",
+                fontWeight: FontWeight.normal,
+                color: Utils.lightGray))
       ],
     );
     final emailField = TextFormField(
       maxLines: 1,
       keyboardType: TextInputType.emailAddress,
       autofocus: false,
-      decoration: new InputDecoration(
+      decoration: InputDecoration(
         errorBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: Colors.red),
+          borderSide: const BorderSide(color: Colors.red),
           borderRadius: BorderRadius.circular(35.0),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(35.0),
-          borderSide: BorderSide(
+          borderSide: const BorderSide(
             color: Colors.blue,
           ),
         ),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(35.0),
           borderSide: BorderSide(
-            color: Utils.primaryColor,
+            color: Utils.lightGray,
             width: 1.0,
           ),
         ),
-        contentPadding: EdgeInsets.symmetric(horizontal: 20),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 20),
         hintText: 'Email',
       ),
       validator: Utils.validateEmail,
@@ -486,28 +374,28 @@ class _HomeState extends State<Home> {
       maxLines: 1,
       obscureText: true,
       autofocus: false,
-      decoration: new InputDecoration(
+      decoration: InputDecoration(
           errorBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.red),
+            borderSide: const BorderSide(color: Colors.red),
             borderRadius: BorderRadius.circular(35.0),
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(35.0),
-            borderSide: BorderSide(
+            borderSide: const BorderSide(
               color: Colors.blue,
             ),
           ),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(35.0),
             borderSide: BorderSide(
-              color: Utils.primaryColor,
+              color: Utils.lightGray,
               width: 1.0,
             ),
           ),
           hintText: 'Password',
-          contentPadding: EdgeInsets.symmetric(horizontal: 20)),
+          contentPadding: const EdgeInsets.symmetric(horizontal: 20)),
       validator: (value) {
-        if (value.length > 0) {
+        if (value.isNotEmpty) {
           return null;
         } else {
           return 'Password is required';
@@ -521,10 +409,10 @@ class _HomeState extends State<Home> {
       children: [
         GestureDetector(
           onTap: () {
-            Navigator.of(context)
-                .push(MaterialPageRoute(builder: (context) => ResetScreen()));
+            Navigator.of(context).push(
+                MaterialPageRoute(builder: (context) => const ResetScreen()));
           },
-          child: Text(
+          child: const Text(
             "Forget Password?",
             style: TextStyle(color: Colors.black, fontSize: 14),
           ),
@@ -538,7 +426,7 @@ class _HomeState extends State<Home> {
       color: Utils.primaryColor, //Color(0xff01A0C7),
       child: MaterialButton(
         minWidth: MediaQuery.of(context).size.width,
-        padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
+        padding: const EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
         onPressed: validateAndSubmit,
         child: isLoading
             ? showCircularProgress()
@@ -549,39 +437,40 @@ class _HomeState extends State<Home> {
       ),
     );
     return Scaffold(
+      backgroundColor: Utils.backgroundColor,
       body: SingleChildScrollView(
         child: Form(
           key: _formKey,
           child: Container(
-            padding: EdgeInsets.symmetric(horizontal: 20),
+            padding: const EdgeInsets.symmetric(horizontal: 20),
             height: MediaQuery.of(context).size.height,
-            decoration: BoxDecoration(color: Colors.white),
+            decoration: const BoxDecoration(color: Colors.white),
             alignment: Alignment.center,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
                 title,
-                SizedBox(
+                const SizedBox(
                   height: 35,
                 ),
                 emailField,
-                SizedBox(
+                const SizedBox(
                   height: 15,
                 ),
                 passwordField,
-                SizedBox(
+                const SizedBox(
                   height: 7,
                 ),
                 forgetPassword,
-                SizedBox(
+                const SizedBox(
                   height: 15,
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 20,
                 ),
                 loginButton,
-                SizedBox(
+                const SizedBox(
                   height: 25,
                 ),
                 Row(
@@ -590,34 +479,32 @@ class _HomeState extends State<Home> {
                         child: Container(
                       height: 2,
                       color: Colors.grey,
-                      margin: EdgeInsets.symmetric(horizontal: 20),
+                      margin: const EdgeInsets.symmetric(horizontal: 20),
                     )),
-                    Container(
-                      child: Text(
-                        "Or",
-                        style: TextStyle(fontSize: 18),
-                      ),
+                    const Text(
+                      "Or",
+                      style: TextStyle(fontSize: 18),
                     ),
                     Expanded(
                       child: Container(
                           height: 2,
                           color: Colors.grey,
-                          margin: EdgeInsets.symmetric(horizontal: 20)),
+                          margin: const EdgeInsets.symmetric(horizontal: 20)),
                     )
                   ],
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 25,
                 ),
                 _signInButton(),
-                SizedBox(
+                const SizedBox(
                   height: 25,
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Text("Don't have an account yet?",
+                    const Text("Don't have an account yet?",
                         style: TextStyle(
                           fontFamily: 'Roboto',
                           fontWeight: FontWeight.w500,
@@ -630,7 +517,7 @@ class _HomeState extends State<Home> {
                               color: Utils.primaryColor)),
                       onPressed: () {
                         Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => Register()));
+                            builder: (context) => const Register()));
                       },
                     ),
                   ],
@@ -643,14 +530,3 @@ class _HomeState extends State<Home> {
     );
   }
 }
-
-class Choice {
-  const Choice({this.title, this.icon});
-
-  final String title;
-  final IconData icon;
-}
-
-const List<Choice> choices = const <Choice>[
-  const Choice(title: 'Logout', icon: Icons.admin_panel_settings),
-];

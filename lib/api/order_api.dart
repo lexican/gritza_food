@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-//final FirebaseAuth _auth = FirebaseAuth.instance;
 class OrderApi {
   final CollectionReference ref =
       FirebaseFirestore.instance.collection("orders");
@@ -45,7 +44,6 @@ class OrderApi {
   }
 
   Future<DocumentReference> addDocument(Map<String, dynamic> data) {
-    print("data: $data");
     return ref.add(data);
   }
 

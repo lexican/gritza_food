@@ -2,25 +2,25 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class RestaurantModel {
   final dynamic id;
-  final String restaurant_name;
+  final String restaurantName;
   final String address;
-  final String background_url;
+  final String backgroundUrl;
   final dynamic userId;
   final dynamic specialty;
-  final int delivery_fee;
-  final int min_order;
-  final String delivery_time;
+  final int deliveryFee;
+  final int minOrder;
+  final String deliveryTime;
 
   RestaurantModel(
       {this.id,
       this.address,
-      this.background_url,
-      this.restaurant_name,
+      this.backgroundUrl,
+      this.restaurantName,
       this.userId,
       this.specialty,
-      this.delivery_fee,
-      this.min_order,
-      this.delivery_time});
+      this.deliveryFee,
+      this.minOrder,
+      this.deliveryTime});
 
   factory RestaurantModel.fromSnapshot(DocumentSnapshot snaphot) {
     Map getDocs = snaphot.data();
@@ -28,12 +28,12 @@ class RestaurantModel {
     return RestaurantModel(
         id: snaphot.id,
         address: getDocs['address'],
-        background_url: getDocs['background_url'],
-        restaurant_name: getDocs['name'],
+        backgroundUrl: getDocs['backgroundUrl'],
+        restaurantName: getDocs['name'],
         userId: getDocs['userId'],
         specialty: getDocs['specialty'],
-        delivery_fee: getDocs['delivery_fee'],
-        min_order: getDocs['min_order'],
-        delivery_time: getDocs['delivery_time']);
+        deliveryFee: getDocs['deliveryFee'],
+        minOrder: getDocs['minOrder'],
+        deliveryTime: getDocs['deliveryTime']);
   }
 }

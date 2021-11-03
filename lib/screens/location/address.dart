@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:gritzafood/models/suggestion.dart';
-import 'package:gritzafood/Utils/places_service.dart';
 import 'package:gritzafood/states/map_states.dart';
+import 'package:gritzafood/utils/places_service.dart';
 import 'package:provider/provider.dart';
 
 class AddressSearch extends SearchDelegate<Suggestion> {
   AddressSearch(this.sessionToken) {
     apiClient = PlaceApiProvider(sessionToken);
   }
-  final sessionToken;
+  final dynamic sessionToken;
   PlaceApiProvider apiClient;
 
   @override
@@ -16,7 +16,7 @@ class AddressSearch extends SearchDelegate<Suggestion> {
     return [
       IconButton(
         tooltip: 'Clear',
-        icon: Icon(Icons.clear),
+        icon: const Icon(Icons.clear),
         onPressed: () {
           query = '';
         },
@@ -28,7 +28,7 @@ class AddressSearch extends SearchDelegate<Suggestion> {
   Widget buildLeading(BuildContext context) {
     return IconButton(
       tooltip: 'Back',
-      icon: Icon(Icons.arrow_back),
+      icon: const Icon(Icons.arrow_back),
       onPressed: () {
         close(context, null);
       },
@@ -38,7 +38,7 @@ class AddressSearch extends SearchDelegate<Suggestion> {
   @override
   Widget buildResults(BuildContext context) {
     return Column(
-      children: [],
+      children: const [],
     );
   }
 
@@ -46,11 +46,7 @@ class AddressSearch extends SearchDelegate<Suggestion> {
   Widget buildSuggestions(BuildContext context) {
     final appState = Provider.of<MapStates>(context);
     void onSelect(placeId, description, appState) async {
-      print("result.placeId:" + placeId);
       if (placeId != null) {
-        // setState(() {
-        //   //_controller.text = result.description;
-        // });
         final placeDetails =
             await PlaceApiProvider(sessionToken).getPlace(placeId);
         appState.goToPlace(placeDetails);
@@ -62,8 +58,8 @@ class AddressSearch extends SearchDelegate<Suggestion> {
           query, Localizations.localeOf(context).languageCode),
       builder: (context, snapshot) => query == ''
           ? Container(
-              padding: EdgeInsets.all(16.0),
-              child: Text('Enter your address'),
+              padding: const EdgeInsets.all(16.0),
+              child: const Text('Enter your address'),
             )
           : snapshot.hasData
               ? ListView.builder(
@@ -80,11 +76,9 @@ class AddressSearch extends SearchDelegate<Suggestion> {
                   ),
                   itemCount: snapshot.data.length,
                 )
-              : Container(
-                  child: Center(
-                    child: CircularProgressIndicator(),
-                  ),
-                ),
+              : const Center(
+                child: CircularProgressIndicator(),
+              ),
     );
   }
 }

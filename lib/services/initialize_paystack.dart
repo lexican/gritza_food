@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 
-createAccessCode(skTest, amount, email) async {
+dynamic createAccessCode(skTest, amount, email) async {
   // skTest -> Secret key
   Map<String, String> headers = {
     'Content-Type': 'application/json',
